@@ -1,0 +1,18 @@
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-signin">
+    <div class="text-center mb-4">
+            <img src="images/utbm_carre.png" alt="Logo UTBM"  width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
+        </div>
+    <div class="form-label-group">
+        <input type="email" formControlName="email" class="form-control" id="email" autocomplete="email" required autofocus>
+        <label for="email">Email address</label>
+    </div>
+    <div class="form-label-group">
+        <input type="password" formControlName="password" class="form-control" id="password" autocomplete="current-password" required>
+        <label for="password">Password</label>
+        <span (click)="togglePasswordVisibility()">
+            <i class="bi" [ngClass]="{'bi-eye': hidePassword, 'bi-eye-slash': !hidePassword}"></i>
+        </span>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+</form>
