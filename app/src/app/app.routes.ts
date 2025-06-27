@@ -17,6 +17,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { Logout } from './logout/logout';
 import { Logs } from './logs/logs';
 import { AdminDashboard } from './admin-dashboard/admin-dashboard';
+import { AssignmentComponent } from './assignment/assignment';
 
 export const routes: Routes = [
   { path: '', canActivate: [AuthGuard], children: [] },
@@ -27,6 +28,7 @@ export const routes: Routes = [
   { path: 'cours/:id', component: Cours },
   { path: 'course/:id', component: Cours },
   { path: 'course/:id/participants', component: CourseParticipant, canActivate: [TeacherGuard] },
+  { path: 'assignment/:id', component: AssignmentComponent },
   { path: 'create-ue', component: CreateUe, canActivate: [AdminGuard] },
   { path: 'edit-ue/:id', component: EditUe, canActivate: [AdminGuard] },
   { path: 'create-user', component: CreateUser, canActivate: [AdminGuard] },

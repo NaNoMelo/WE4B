@@ -1,0 +1,268 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Chargement...</span>
+  </div>
+  <p>Chargement du devoir...</p>
+</div>
+
+<!-- Assignment Content -->
+<div *ngIf="!isLoading && assignment" class="assignment-container">
+  <!-- Assignment Header -->
+  <div class="assignment-header">
+    <div class="assignment-info">
+      <h1>{{ assignment.title }}</h1>
+      <p class="assignment-description">{{ assignment.description }}</p>
+      
+      <div class="assignment-meta">
+        <div class="due-date" [ngClass]="{'overdue': isOverdue(), 'soon': getDaysUntilDue() <= 3 && getDaysUntilDue() > 0}">
+          <i class="fas fa-calendar-alt"></i>
+          <span *ngIf="!isOverdue()">
+            Échéance: {{ assignment.due_date | date:'dd/MM/yyyy à HH:mm' }}
+            ({{ getDaysUntilDue() }} jour(s) restant(s))
+          </span>
+          <span *ngIf="isOverdue()" class="overdue-text">
+            Échéance dépassée ({{ assignment.due_date | date:'dd/MM/yyyy à HH:mm' }})
+          </span>
+        </div>
+        
+        <div class="max-score" *ngIf="assignment.max_score">
+          <i class="fas fa-star"></i>
+          Note maximale: {{ assignment.max_score }} points
+        </div>
+        
+        <div class="created-date">
+          <i class="fas fa-clock"></i>
+          Créé le: {{ assignment.created_date | date:'dd/MM/yyyy à HH:mm' }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student View - Submission -->
+  <div *ngIf="!isTeacher" class="student-section">
+    <!-- New Update Notification -->
+    <div *ngIf="hasNewUpdate()" class="update-notification">
+      <i class="fas fa-bell"></i>
+      <span>{{ getUpdateMessage() }}</span>
+      <div class="notification-badge">Nouveau</div>
+    </div>
+
+    <!-- Already Submitted -->
+    <div *ngIf="mySubmission" class="student-submission-status submitted">
+      <div class="status-header">
+        <i class="fas fa-check-circle"></i>
+        <h3>Devoir soumis</h3>
+        <div class="submission-status-badge" [ngClass]="mySubmission.status">
+          <span *ngIf="mySubmission.status === 'submitted'">Soumis</span>
+          <span *ngIf="mySubmission.status === 'graded'">Corrigé</span>
+          <span *ngIf="mySubmission.status === 'late'">En retard</span>
+        </div>
+      </div>
+      
+      <div class="submission-simple">
+        <div class="submission-info">
+          <p><strong>Date de soumission:</strong> {{ mySubmission.submitted_date | date:'dd/MM/yyyy à HH:mm' }}</p>
+          
+          <div *ngIf="mySubmission.file_id" class="file-info">
+            <i class="fas fa-file"></i>
+            <span>{{ getFileName(mySubmission.file_id) }}</span>
+            <button class="download-btn-small" 
+                    (click)="downloadMySubmission()" 
+                    title="Télécharger votre fichier">
+              <i class="fas fa-download"></i>
+              <span>Télécharger</span>
+            </button>
+          </div>
+          
+          <div *ngIf="mySubmission.score !== undefined" class="grade-info-simple">
+            <p><strong>Note:</strong> {{ mySubmission.score }}/{{ assignment.max_score }} ({{ getScorePercentage() | number:'1.0-1' }}%)</p>
+          </div>
+          
+          <div *ngIf="mySubmission.feedback" class="feedback-simple">
+            <p><strong>Commentaire:</strong> {{ mySubmission.feedback }}</p>
+          </div>
+          
+          <div *ngIf="mySubmission.status === 'submitted' || mySubmission.status === 'late'" class="pending-info">
+            <p><em>En attente de correction par l'enseignant</em></p>
+          </div>
+          
+          <!-- Modify button if not too late or already graded -->
+          <div *ngIf="(!isOverdue() || mySubmission.status !== 'graded') && mySubmission.status !== 'graded'" class="modify-actions">
+            <button class="modify-btn" (click)="startModifySubmission()">
+              <i class="fas fa-edit"></i>
+              Modifier ma soumission
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Assignment -->
+    <div *ngIf="!mySubmission" class="submission-form">
+      <h3>Soumettre votre devoir</h3>
+      
+      <!-- Late submission warning -->
+      <div *ngIf="isOverdue()" class="late-submission-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>Attention : Vous soumettez ce devoir après la date limite. Il sera marqué comme "En retard".</span>
+      </div>
+      
+      <div class="file-upload-area"
+           (click)="fileInput.click()"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)"
+           [ngClass]="{'has-file': selectedFile}">
+        <div *ngIf="!selectedFile" class="upload-placeholder">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Cliquez ici ou déposez votre fichier</p>
+          <small>Tous types de fichiers acceptés</small>
+        </div>
+        
+        <div *ngIf="selectedFile" class="selected-file">
+          <i class="fas fa-file"></i>
+          <div class="file-info">
+            <p class="file-name">{{ selectedFile.name }}</p>
+            <p class="file-size">{{ formatFileSize(selectedFile.size) }}</p>
+          </div>
+          <button type="button" 
+                  class="remove-file" 
+                  (click)="removeSelectedFile($event)"
+                  title="Supprimer le fichier sélectionné">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <input #fileInput
+             type="file"
+             style="display: none;"
+             (change)="onFileSelected($event)">
+      
+      <button class="submit-button"
+              [disabled]="!selectedFile || isSubmitting"
+              (click)="onSubmitAssignment()">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-2"></span>
+        <i *ngIf="!isSubmitting" class="fas fa-paper-plane"></i>
+        {{ isSubmitting ? 'Soumission en cours...' : (isOverdue() ? 'Soumettre en retard' : 'Soumettre le devoir') }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Teacher View - Submissions -->
+  <div *ngIf="isTeacher" class="teacher-section">
+    <h3>Soumissions des étudiants</h3>
+    
+    <div *ngIf="submissions.length === 0" class="no-submissions">
+      <i class="fas fa-inbox"></i>
+      <p>Aucune soumission pour le moment</p>
+    </div>
+    
+    <div *ngIf="submissions.length > 0" class="submissions-list">
+      <div *ngFor="let submission of submissions" class="submission-item">
+        <div class="submission-header">
+          <div class="student-info">
+            <i class="fas fa-user"></i>
+            <span>{{ getStudentName(submission.student_id) }}</span>
+          </div>
+          <div class="submission-date">
+            {{ submission.submitted_date | date:'dd/MM/yyyy à HH:mm' }}
+          </div>
+          <div class="submission-status" [ngClass]="submission.status">
+            <span *ngIf="submission.status === 'submitted'">Soumis</span>
+            <span *ngIf="submission.status === 'graded'">Corrigé</span>
+            <span *ngIf="submission.status === 'late'">En retard</span>
+            <i *ngIf="submission.status === 'late'" class="fas fa-clock" style="margin-left: 4px;"></i>
+          </div>
+          <div class="submission-actions">
+            <button class="download-btn" 
+                    (click)="downloadSubmission(submission)"
+                    *ngIf="submission.file_id"
+                    title="Télécharger la soumission de {{ getStudentName(submission.student_id) }}">
+              <i class="fas fa-download"></i>
+              <span>Télécharger</span>
+            </button>
+            <button class="grade-btn" 
+                    (click)="startGrading(submission)"
+                    *ngIf="gradingSubmission !== submission.id"
+                    [ngClass]="{'already-graded': submission.score !== undefined}">
+              <i class="fas fa-edit"></i>
+              {{ submission.score !== undefined ? 'Modifier' : 'Noter' }}
+            </button>
+          </div>
+        </div>
+        
+        <!-- Submission Details -->
+        <div class="submission-details">
+          <div class="detail-item" *ngIf="submission.file_id">
+            <i class="fas fa-file"></i>
+            <span>Fichier: {{ getFileName(submission.file_id) }}</span>
+          </div>
+          <div class="detail-item" *ngIf="submission.score !== undefined">
+            <i class="fas fa-star"></i>
+            <span><strong>Note:</strong> {{ submission.score }}/{{ assignment?.max_score || 100 }}</span>
+          </div>
+          <div class="detail-item" *ngIf="submission.feedback">
+            <i class="fas fa-comment"></i>
+            <span><strong>Commentaire:</strong> {{ submission.feedback }}</span>
+          </div>
+        </div>
+        
+        <!-- Grading Form -->
+        <div class="grading-form" *ngIf="gradingSubmission === submission.id">
+          <div class="grade-inputs">
+            <div class="score-input">
+              <label for="score-{{submission.id}}">Note</label>
+              <div class="score-wrapper">
+                <input type="number" 
+                       id="score-{{submission.id}}"
+                       [(ngModel)]="gradeForm[submission.id].score"
+                       [max]="assignment?.max_score || 100"
+                       min="0"
+                       step="0.5"
+                       class="form-control">
+                <span class="max-score">/ {{ assignment?.max_score || 100 }}</span>
+              </div>
+            </div>
+            <div class="feedback-input">
+              <label for="feedback-{{submission.id}}">Commentaire (optionnel)</label>
+              <textarea id="feedback-{{submission.id}}"
+                        [(ngModel)]="gradeForm[submission.id].feedback"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Commentaires sur le travail de l'étudiant..."></textarea>
+            </div>
+          </div>
+          <div class="grade-actions">
+            <button class="save-grade-btn" (click)="submitGrade(submission)">
+              <i class="fas fa-save"></i>
+              Enregistrer la note
+            </button>
+            <button class="cancel-grade-btn" (click)="cancelGrading()">
+              <i class="fas fa-times"></i>
+              Annuler
+            </button>
+          </div>
+        </div>
+        
+        <!-- Current Grade Display -->
+        <div class="submission-details" *ngIf="submission.score !== undefined || submission.feedback">
+          <div class="score" *ngIf="submission.score !== undefined">
+            <i class="fas fa-star"></i>
+            Note: <strong>{{ submission.score }}/{{ assignment?.max_score || 100 }}</strong>
+          </div>
+          <div class="feedback" *ngIf="submission.feedback">
+            <i class="fas fa-comment"></i>
+            <strong>Commentaire:</strong> {{ submission.feedback }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!isLoading && !assignment" class="alert alert-danger">
+  Erreur lors du chargement du devoir.
+</div>

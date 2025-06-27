@@ -66,7 +66,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'file',
-        file_id: 'file_001'
+        file_id: 1
       },
       {
         id: '6',
@@ -78,7 +78,55 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'file',
-        file_id: 'file_003'
+        file_id: 3
+      },
+      {
+        id: '7',
+        title: 'Devoir 1 - Classes et Objets',
+        description: 'Premier devoir sur les concepts de base de la programmation orientée objet. Créez une classe représentant un véhicule avec ses propriétés et méthodes.',
+        date_time: '2025-01-28T09:00:00Z',
+        pinned: true,
+        importance: 'high',
+        author_id: '3',
+        course_id: courseId,
+        type: 'assignment',
+        assignment_id: 'assign_001'
+      },
+      {
+        id: '8',
+        title: 'Projet Final - Application Web Complète',
+        description: 'Développez une application web complète utilisant Angular et TypeScript. Ce projet majeur sera évalué sur 100 points et constitue l\'évaluation finale du cours.',
+        date_time: '2025-06-27T10:00:00Z',
+        pinned: true,
+        importance: 'high',
+        author_id: '3',
+        course_id: courseId,
+        type: 'assignment',
+        assignment_id: 'assign_002'
+      },
+      {
+        id: '9',
+        title: 'TP3 - Analyse de Base de Données',
+        description: 'Analysez le schéma de base de données fourni et créez un rapport détaillé. Date limite : 5 juillet 2025. Format PDF requis.',
+        date_time: '2025-06-27T11:00:00Z',
+        pinned: false,
+        importance: 'medium',
+        author_id: '3',
+        course_id: courseId,
+        type: 'assignment',
+        assignment_id: 'assign_003'
+      },
+      {
+        id: '10',
+        title: 'Test Empty - Nouveau Devoir',
+        description: 'Devoir de test pour vérifier les soumissions vides. Créez un document simple avec votre nom et votre compréhension des concepts vus en cours.',
+        date_time: '2025-06-27T14:00:00Z',
+        pinned: false,
+        importance: 'medium',
+        author_id: '3',
+        course_id: courseId,
+        type: 'assignment',
+        assignment_id: 'assign_004'
       }
     ];
     return of(fakePosts);
@@ -101,7 +149,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'file',
-        file_id: 'file_001'
+        file_id: 1
       },
       '6': {
         id: '6',
@@ -113,7 +161,55 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'file',
-        file_id: 'file_003'
+        file_id: 3
+      },
+      '7': {
+        id: '7',
+        title: 'Devoir 1 - Classes et Objets',
+        description: 'Premier devoir sur les concepts de base de la programmation orientée objet. Créez une classe représentant un véhicule avec ses propriétés et méthodes.',
+        date_time: '2025-01-28T09:00:00Z',
+        pinned: true,
+        importance: 'high',
+        author_id: '3',
+        course_id: '1',
+        type: 'assignment',
+        assignment_id: 'assign_001'
+      },
+      '8': {
+        id: '8',
+        title: 'Projet Final - Application Web Complète',
+        description: 'Développez une application web complète utilisant Angular et TypeScript. Ce projet majeur sera évalué sur 100 points et constitue l\'évaluation finale du cours.',
+        date_time: '2025-06-27T10:00:00Z',
+        pinned: true,
+        importance: 'high',
+        author_id: '3',
+        course_id: '1',
+        type: 'assignment',
+        assignment_id: 'assign_002'
+      },
+      '9': {
+        id: '9',
+        title: 'TP3 - Analyse de Base de Données',
+        description: 'Analysez le schéma de base de données fourni et créez un rapport détaillé. Date limite : 5 juillet 2025. Format PDF requis.',
+        date_time: '2025-06-27T11:00:00Z',
+        pinned: false,
+        importance: 'medium',
+        author_id: '3',
+        course_id: '1',
+        type: 'assignment',
+        assignment_id: 'assign_003'
+      },
+      '10': {
+        id: '10',
+        title: 'Test Empty - Nouveau Devoir',
+        description: 'Devoir de test pour vérifier les soumissions vides. Créez un document simple avec votre nom et votre compréhension des concepts vus en cours.',
+        date_time: '2025-06-27T14:00:00Z',
+        pinned: false,
+        importance: 'medium',
+        author_id: '3',
+        course_id: '1',
+        type: 'assignment',
+        assignment_id: 'assign_004'
       }
     };
 

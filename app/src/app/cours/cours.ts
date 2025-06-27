@@ -4,6 +4,7 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { CourseService } from '../services/course.service';
 import { PostService } from '../services/post.service';
 import { AuthService } from '../services/auth.service';
+import { UserService } from '../services/user.service';
 import { LogService } from '../services/log.service';
 import { FileService } from '../services/file.service';
 import { Course, Post, User, FileModel } from '../models/api.models';
@@ -21,8 +22,9 @@ export class Cours implements OnInit {
   protected canModify: boolean = false;
   protected posts: Post[] = [];
   protected isLoading: boolean = true;
-  protected fileNames: { [fileId: string]: string } = {};
-  protected fileMetadataCache: { [fileId: string]: FileModel } = {};
+  protected fileNames: { [fileId: number]: string } = {};
+  protected fileMetadataCache: { [fileId: number]: FileModel } = {};
+  protected userCache: { [userId: string]: User } = {}; // Cache for user data
 
   constructor(
     private router: Router,
@@ -30,6 +32,7 @@ export class Cours implements OnInit {
     private courseService: CourseService,
     private postService: PostService,
     private authService: AuthService,
+    private userService: UserService,
     private logService: LogService,
     private fileService: FileService
   ) {}
@@ -75,14 +78,32 @@ export class Cours implements OnInit {
   }
 
   private loadPosts(): void {
-    if (this.courseId) {
-      this.postService.getPostsByCourse(this.courseId).subscribe({
-        next: (posts: Post[]) => {
-          this.posts = this.sortPosts(posts);
-          this.loadFileNames();
+    this.postService.getPostsByCourse(this.courseId).subscribe({
+      next: (posts: Post[]) => {
+        this.posts = posts;
+        
+        // Pre-load user data for all post authors
+        posts.forEach(post => {
+          if (post.author_id) {
+            this.preloadUserData(post.author_id);
+          }
+        });
+      },
+      error: (error: any) => {
+        console.error('Error loading posts:', error);
+      }
+    });
+  }
+
+  // Pre-load user data for caching
+  private preloadUserData(userId: string): void {
+    if (!this.userCache[userId]) {
+      this.userService.getUserById(userId).subscribe({
+        next: (user: User) => {
+          this.userCache[userId] = user;
         },
         error: (error: any) => {
-          console.error('Error loading posts:', error);
+          console.error('Error loading user data for:', userId, error);
         }
       });
     }
@@ -178,13 +199,13 @@ export class Cours implements OnInit {
   }
 
   // Get file name for file posts
-  getFileName(fileId: string | undefined): string {
+  getFileName(fileId: number | undefined): string {
     if (!fileId) return 'Fichier inconnu';
     return this.fileNames[fileId] || 'Chargement...';
   }
 
   // Get file metadata for file posts
-  getFileMetadata(fileId: string | undefined): FileModel | null {
+  getFileMetadata(fileId: number | undefined): FileModel | null {
     if (!fileId) return null;
     return this.fileMetadataCache[fileId] || null;
   }
@@ -200,7 +221,7 @@ export class Cours implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  onDownload(fileId: string | undefined): void {
+  onDownload(fileId: number | undefined): void {
     if (!fileId) {
       console.error('No file ID provided for download');
       return;
@@ -243,5 +264,26 @@ export class Cours implements OnInit {
         alert('Erreur lors de la récupération des informations du fichier');
       }
     });
+  }
+
+  // Get user name from user ID using API
+  getAuthorName(userId: string): string {
+    // Check cache first
+    if (this.userCache[userId]) {
+      const user = this.userCache[userId];
+      return `${user.first_name} ${user.name}`;
+    }
+    
+    // Load user data if not in cache
+    this.userService.getUserById(userId).subscribe({
+      next: (user: User) => {
+        this.userCache[userId] = user;
+      },
+      error: (error: any) => {
+        console.error('Error loading user:', userId, error);
+      }
+    });
+    
+    return 'Chargement...'; // Temporary placeholder while loading
   }
 }

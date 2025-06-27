@@ -46,7 +46,7 @@
         </div>
         <div class="post-meta">
           {{ post.date_time | date:'dd/MM/yyyy à HH:mm' }}
-          <span *ngIf="post.author_id">· par Auteur {{ post.author_id }}</span>
+          <span *ngIf="post.author_id">· par {{ getAuthorName(post.author_id) }}</span>
           <button *ngIf="canModify" class="modify-button" (click)="onEditPost(post.id)">
             <i class="fas fa-edit"></i> Modifier
           </button>
@@ -77,6 +77,24 @@
             <i class="fas fa-download"></i>
             <span>Télécharger</span>
           </button>
+        </div>
+        
+        <!-- Assignment posts -->
+        <div class="assignment-attachment" *ngIf="post.type === 'assignment' && post.assignment_id">
+          <div class="assignment-icon-container">
+            <i class="fas fa-clipboard-list assignment-icon"></i>
+          </div>
+          <div class="assignment-info">
+            <div class="assignment-label">Devoir à rendre</div>
+            <div class="assignment-meta">
+              <span class="assignment-type-badge">Devoir</span>
+              <span class="assignment-status">Cliquez pour voir les détails et soumettre</span>
+            </div>
+          </div>
+          <a [routerLink]="['/assignment', post.assignment_id]" class="assignment-view-button" title="Voir le devoir">
+            <i class="fas fa-external-link-alt"></i>
+            <span>Ouvrir le devoir</span>
+          </a>
         </div>
       </div>
     </div>

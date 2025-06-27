@@ -22,6 +22,14 @@
     <i class="fas fa-file-upload"></i>
     Partage de fichier
   </button>
+  <button type="button"
+          class="post-type-button"
+          [ngClass]="{'active': postType === 'assignment', 'disabled': isEditing}"
+          [disabled]="isEditing"
+          (click)="setPostType('assignment')">
+    <i class="fas fa-tasks"></i>
+    Devoir à rendre
+  </button>
 </div>
 
 <div *ngIf="isEditing" class="info-message">
@@ -181,6 +189,89 @@
     <button type="submit" class="submit-button">
       <i class="fas fa-save"></i>
       {{ isEditing ? 'Mettre à jour' : 'Publier' }}
+    </button>
+    <button type="button"
+            class="cancel-button"
+            (click)="onCancel()">
+      Annuler
+    </button>
+  </div>
+</form>
+
+<form *ngIf="postType === 'assignment'"
+      class="post-form active"
+      (ngSubmit)="onSubmitAssignment()"
+      #formAssignment="ngForm">
+  <input type="hidden" name="post_type" value="assignment">
+  <input type="hidden" name="course_id" [value]="courseId">
+  <input *ngIf="isEditing" type="hidden" name="post_id" [value]="postId">
+
+  <div class="form-group">
+    <label for="title-assignment">Titre du devoir</label>
+    <input id="title-assignment"
+           name="title"
+           class="form-control"
+           required
+           [(ngModel)]="post.title">
+  </div>
+
+  <div class="form-group">
+    <label for="content-assignment">Description du devoir</label>
+    <textarea id="content-assignment"
+              name="description"
+              class="form-control"
+              required
+              rows="4"
+              placeholder="Décrivez les objectifs, les consignes et les critères d'évaluation..."
+              [(ngModel)]="post.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="due-date">Date limite de rendu</label>
+    <input id="due-date"
+           name="due_date"
+           type="datetime-local"
+           class="form-control"
+           required
+           [(ngModel)]="assignmentDueDate">
+  </div>
+
+  <div class="form-group">
+    <label for="max-score">Note maximale (optionnel)</label>
+    <input id="max-score"
+           name="max_score"
+           type="number"
+           class="form-control"
+           min="1"
+           max="100"
+           [(ngModel)]="assignmentMaxScore">
+  </div>
+
+  <div class="form-group">
+    <label for="importance-assignment">Importance</label>
+    <select id="importance-assignment"
+            name="importance"
+            class="form-control"
+            [(ngModel)]="post.importance">
+      <option value="normal">Normale</option>
+      <option value="high">Haute</option>
+      <option value="low">Basse</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox"
+             name="pinned"
+             [(ngModel)]="post.pinned">
+      Épingler ce devoir
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="submit-button">
+      <i class="fas fa-save"></i>
+      {{ isEditing ? 'Mettre à jour' : 'Créer le devoir' }}
     </button>
     <button type="button"
             class="cancel-button"

@@ -10,28 +10,70 @@ export class UserService extends ApiService {
 
   // GET /users - Get all users
   getAllUsers(): Observable<User[]> {
-    // Fake data for development
+    // Fake data for development - matches IDs used in assignment service
     const fakeUsers: User[] = [
       {
         id: '1',
-        email: 'john.doe@example.com',
-        name: 'Doe',
-        first_name: 'John',
+        email: 'student@example.com',
+        name: 'Dupont',
+        first_name: 'Jean',
         roles: ['ROLE_USER']
       },
       {
         id: '2',
-        email: 'marie.martin@example.com',
+        email: 'teacher@example.com',
         name: 'Martin',
         first_name: 'Marie',
-        roles: ['ROLE_TEACHER', 'ROLE_ADMIN']
+        roles: ['ROLE_TEACHER']
       },
       {
         id: '3',
-        email: 'pierre.durand@example.com',
-        name: 'Durand',
+        email: 'admin@example.com',
+        name: 'Admin',
+        first_name: 'Super',
+        roles: ['ROLE_ADMIN']
+      },
+      {
+        id: '4',
+        email: 'teacher.admin@example.com',
+        name: 'Professeur',
         first_name: 'Pierre',
-        roles: ['ROLE_TEACHER']
+        roles: ['ROLE_TEACHER', 'ROLE_ADMIN']
+      },
+      {
+        id: '5',
+        email: 'marie.dubois@example.com',
+        name: 'Dubois',
+        first_name: 'Marie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '6',
+        email: 'sophie.laurent@example.com',
+        name: 'Laurent',
+        first_name: 'Sophie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '7',
+        email: 'thomas.bernard@example.com',
+        name: 'Bernard',
+        first_name: 'Thomas',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '8',
+        email: 'julie.moreau@example.com',
+        name: 'Moreau',
+        first_name: 'Julie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '9',
+        email: 'antoine.leroy@example.com',
+        name: 'Leroy',
+        first_name: 'Antoine',
+        roles: ['ROLE_USER']
       }
     ];
     return of(fakeUsers);
@@ -39,15 +81,88 @@ export class UserService extends ApiService {
 
   // GET /users/{id} - Get user by ID
   getUserById(id: string): Observable<User> {
-    // Fake data for development
-    const fakeUser: User = {
+    // Use the same fake data defined in getAllUsers
+    const fakeUsers: User[] = [
+      {
+        id: '1',
+        email: 'student@example.com',
+        name: 'Dupont',
+        first_name: 'Jean',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '2',
+        email: 'teacher@example.com',
+        name: 'Martin',
+        first_name: 'Marie',
+        roles: ['ROLE_TEACHER']
+      },
+      {
+        id: '3',
+        email: 'admin@example.com',
+        name: 'Admin',
+        first_name: 'Super',
+        roles: ['ROLE_ADMIN']
+      },
+      {
+        id: '4',
+        email: 'teacher.admin@example.com',
+        name: 'Professeur',
+        first_name: 'Pierre',
+        roles: ['ROLE_TEACHER', 'ROLE_ADMIN']
+      },
+      {
+        id: '5',
+        email: 'marie.dubois@example.com',
+        name: 'Dubois',
+        first_name: 'Marie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '6',
+        email: 'sophie.laurent@example.com',
+        name: 'Laurent',
+        first_name: 'Sophie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '7',
+        email: 'thomas.bernard@example.com',
+        name: 'Bernard',
+        first_name: 'Thomas',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '8',
+        email: 'julie.moreau@example.com',
+        name: 'Moreau',
+        first_name: 'Julie',
+        roles: ['ROLE_USER']
+      },
+      {
+        id: '9',
+        email: 'antoine.leroy@example.com',
+        name: 'Leroy',
+        first_name: 'Antoine',
+        roles: ['ROLE_USER']
+      }
+    ];
+
+    const foundUser = fakeUsers.find(user => user.id === id);
+    
+    if (foundUser) {
+      return of(foundUser);
+    }
+
+    // Fallback user if not found
+    const fallbackUser: User = {
       id: id,
-      email: 'john.doe@example.com',
-      name: 'Doe',
-      first_name: 'John',
+      email: 'unknown@example.com',
+      name: 'Utilisateur',
+      first_name: 'Inconnu',
       roles: ['ROLE_USER']
     };
-    return of(fakeUser);
+    return of(fallbackUser);
   }
 
   // PUT /users/{id} - Update user by ID
