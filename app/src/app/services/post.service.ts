@@ -38,7 +38,7 @@ export class PostService extends ApiService {
         description: 'Série d\'exercices pour mettre en pratique les concepts vus en cours.',
         date_time: '2025-01-18T09:15:00Z',
         pinned: false,
-        importance: 'normal',
+        importance: 'low',
         author_id: '3',
         course_id: courseId
       },
@@ -54,6 +54,24 @@ export class PostService extends ApiService {
       }
     ];
     return of(fakePosts);
+  }
+
+  // GET /posts/{id} - Get post by ID
+  getPostById(postId: string): Observable<Post> {
+    // Mock response for development
+    console.log('Getting post by ID:', postId);
+    const fakePost: Post = {
+      id: postId,
+      title: 'Post existant',
+      description: 'Contenu du post existant...',
+      date_time: '2025-01-20T16:00:00Z',
+      pinned: false,
+      importance: 'normal',
+      author_id: '3',
+      course_id: '1' // This should be dynamic based on the post
+    };
+    return of(fakePost);
+    // Real implementation: return this.get<Post>(`/posts/${postId}`);
   }
 
   // POST /courses/{id}/posts - Create a post in course

@@ -35,7 +35,6 @@ export class UserService extends ApiService {
       }
     ];
     return of(fakeUsers);
-    // Real implementation: return this.get<User[]>('/users');
   }
 
   // GET /users/{id} - Get user by ID
@@ -49,7 +48,6 @@ export class UserService extends ApiService {
       roles: ['ROLE_USER']
     };
     return of(fakeUser);
-    // Real implementation: return this.get<User>(`/users/${id}`);
   }
 
   // PUT /users/{id} - Update user by ID
@@ -57,7 +55,6 @@ export class UserService extends ApiService {
     // Mock response for development
     console.log('Updating user:', id, userData);
     return of({} as User);
-    // Real implementation: return this.put<User>(`/users/${id}`, userData);
   }
 
   // DELETE /users/{id} - Delete user by ID
@@ -65,6 +62,5 @@ export class UserService extends ApiService {
     // Mock response for development
     console.log('Deleting user:', id);
     return of({ message: 'User deleted successfully' });
-    // Real implementation: return this.delete(`/users/${id}`);
   }
 }

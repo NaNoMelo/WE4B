@@ -8,7 +8,7 @@
     <div class="tab" [ngClass]="{'active': activeTab==='users'}" (click)="selectTab('users')" id="tab-users">
       Utilisateurs
     </div>
-    <div class="tab" [ngClass]="{'active': activeTab==='ues'}" (click)="selectTab('ues')" id="tab-ues">
+    <div class="tab" [ngClass]="{'active': activeTab==='courses'}" (click)="selectTab('courses')" id="tab-courses">
       Unités d'Enseignement
     </div>
   </div>
@@ -35,7 +35,7 @@
           <td>{{ user.name }}</td>
           <td>{{ user.first_name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.roles.join(', ') }}</td>
+          <td>{{ getRoleLabels(user.roles) }}</td>
           <td class="action-icons">
             <a (click)="onEditUser(user.id)" class="edit-btn"><i class="fas fa-edit"></i></a>
             <a (click)="confirmDelete('user', user.id)" class="delete-btn"><i class="fas fa-trash-alt"></i></a>
@@ -45,7 +45,7 @@
     </table>
   </div>
 
-  <div class="tab-content" [ngClass]="{'active': activeTab==='ues'}" id="content-ues">
+  <div class="tab-content" [ngClass]="{'active': activeTab==='courses'}" id="content-courses">
     <button class="create-btn" (click)="onCreateUe()">
       <i class="fas fa-plus"></i> Créer une UE
     </button>

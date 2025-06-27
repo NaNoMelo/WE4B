@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { User } from './models/api.models';
 
@@ -14,11 +15,30 @@ import { User } from './models/api.models';
 export class App implements OnInit {
   protected title = 'app';
   protected user: User | null = null;
+  protected showNavigation = true;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadUserData();
+    this.checkRouteForNavigation();
+    
+    // Listen to route changes
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: NavigationEnd) => {
+      this.checkRouteForNavigation();
+      this.loadUserData(); // Reload user data on route changes
+    });
+  }
+
+  private checkRouteForNavigation(): void {
+    const currentUrl = this.router.url;
+    const noNavRoutes = ['/login', '/logout'];
+    this.showNavigation = !noNavRoutes.some(route => currentUrl.startsWith(route));
   }
 
   private loadUserData(): void {
@@ -32,6 +52,35 @@ export class App implements OnInit {
           this.user = null;
         }
       });
+    } else {
+      this.user = null;
     }
+  }
+
+  // Check if user has only admin role
+  protected isAdminOnly(): boolean {
+    return this.user?.roles?.length === 1 && this.user.roles.includes('ROLE_ADMIN') || false;
+  }
+
+  // Get user role display text in French
+  protected getUserRoleDisplayText(): string {
+    if (!this.user?.roles?.length) return '';
+    
+    const roleLabels: { [key: string]: string } = {
+      'ROLE_ADMIN': 'Administrateur',
+      'ROLE_TEACHER': 'Enseignant',
+      'ROLE_USER': 'Étudiant'
+    };
+
+    // If multiple roles, show the highest priority role
+    if (this.user.roles.includes('ROLE_ADMIN')) {
+      return roleLabels['ROLE_ADMIN'];
+    } else if (this.user.roles.includes('ROLE_TEACHER')) {
+      return roleLabels['ROLE_TEACHER'];
+    } else if (this.user.roles.includes('ROLE_USER')) {
+      return roleLabels['ROLE_USER'];
+    }
+
+    return this.user.roles[0]; // Fallback to raw role name
   }
 }

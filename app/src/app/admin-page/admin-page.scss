@@ -4,18 +4,21 @@
 .tab.active { background-color: var(--color-primary); color: var(--color-white); }
 .tab-content { display: none; padding: var(--spacing-lg);
                border: var(--border-width) solid var(--color-gray-300);
-               border-radius: 0 0 var(--border-radius-md) var(--border-radius-md); }
+               border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+               background-color: var(--color-white); }
 .tab-content.active { display: block; }
 .admin-table { width: 100%; border-collapse: collapse; margin-top: var(--spacing-lg); }
 .admin-table th, .admin-table td { border: var(--border-width) solid var(--color-gray-300);
                                    padding: var(--spacing-sm); text-align: left; }
 .admin-table th { background-color: var(--color-gray-100); }
 .admin-table tr:nth-child(even) { background-color: var(--color-gray-100); }
-.create-btn { background-color: var(--color-success); color: var(--color-white);
-             padding: var(--spacing-sm) var(--spacing-md); border: none;
+.create-btn { background-color: var(--color-primary); color: var(--color-white);
+             padding: var(--spacing-md) var(--spacing-lg); border: none;
              border-radius: var(--border-radius-sm); cursor: pointer; margin-bottom: var(--spacing-lg);
-             transition: var(--transition-fast); }
-.create-btn:hover { background-color: var(--color-primary-dark); }
+             transition: var(--transition-fast); font-weight: 500;
+             box-shadow: var(--shadow-sm); }
+.create-btn:hover { background-color: var(--color-primary-dark); 
+                   box-shadow: var(--shadow-md); }
 .action-icons a { margin-right: var(--spacing-sm); }
 .delete-btn { color: var(--color-danger); }
 .edit-btn { color: var(--color-primary); }
@@ -24,10 +27,12 @@
 .modal-content { background-color: var(--color-white); padding: var(--spacing-lg);
                  border-radius: var(--border-radius-md); width: 50%; text-align:center;
                  box-shadow: var(--shadow-md); }
-.modal-buttons button { margin: 0 var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md);
+.modal-buttons button { margin: 0 var(--spacing-sm); padding: var(--spacing-md) var(--spacing-lg);
                         border: none; border-radius: var(--border-radius-sm);
-                        cursor: pointer; transition: var(--transition-fast); }
-.confirm-btn { background-color: var(--color-danger); color: var(--color-white); }
-.confirm-btn:hover { background-color: var(--color-primary-dark); }
-.cancel-btn { background-color: var(--color-gray-500); color: var(--color-white); }
-.cancel-btn:hover { background-color: var(--color-gray-600); }
+                        cursor: pointer; transition: var(--transition-fast);
+                        font-weight: 500; font-size: 1rem;
+                        box-shadow: var(--shadow-sm); }
+.confirm-btn { background-color: var(--color-tertiary); color: var(--color-white); }
+.confirm-btn:hover { background-color: #d16d1a; box-shadow: var(--shadow-md); }
+.cancel-btn { background-color: var(--color-gray-600); color: var(--color-white); }
+.cancel-btn:hover { background-color: var(--color-gray-700); box-shadow: var(--shadow-md); }

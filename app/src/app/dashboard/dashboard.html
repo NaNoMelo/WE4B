@@ -22,7 +22,7 @@
        [routerLink]="['/course', course.id]"
        class="course-card">
       <div class="course-image">
-        <img src="assets/images/default-course.png"
+        <img [src]="getCourseImageUrl(course.id)"
              [alt]="course.name"
              class="course-img">
       </div>

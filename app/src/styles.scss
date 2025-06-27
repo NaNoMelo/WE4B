@@ -4,14 +4,19 @@
 
 // 1. Define your custom variables FIRST.
 :root {
+  // Fonts
+  --font-family-base: 'Roboto', sans-serif;
+
   // Colors
   --color-primary: #1177d1;
   --color-primary-dark: #0e5ca0;
   --color-primary-light: #d6e9f8;
+  --color-primary-rgb: 17, 119, 209;
   --color-secondary: #5b9bd5;
   --color-tertiary: #ed8525;
   --color-accent: #8bc34a;
   --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
   --color-gray-100: #f8f9fa;
   --color-gray-200: #e9ecef;
   --color-gray-300: #d4d4d4;
@@ -21,6 +26,7 @@
   --color-gray-700: #333333;
   --color-gray-800: #343a40;
   --color-black: #000000;
+  --color-danger: #dc3545;
   
   // Spacing
   --spacing-xs: 0.25rem;
@@ -56,8 +62,16 @@
 // 4. Add any other global styles.
 body {
     background-color: var(--color-gray-100);
-    font-family: 'Roboto', sans-serif; // Use the imported Roboto font
+    font-family: var(--font-family-base);
     color: var(--color-gray-800); // Set a base text color
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Custom CSS variables for consistent theming */
@@ -134,17 +148,6 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
-    font-family: var(--font-family-base);
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
-    color: var(--color-gray-700);
-    background-color: var(--color-gray-100);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
 }
 
 a {

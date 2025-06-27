@@ -40,7 +40,7 @@
     </div>
 
     <p *ngIf="posts.length === 0">Aucune publication pour le moment.</p>
-    <div *ngFor="let post of posts" class="post" [attr.data-post-id]="post.id">
+    <div *ngFor="let post of posts" class="post" [attr.data-post-id]="post.id" [attr.data-pinned]="post.pinned">
       <div class="post-header">
         <div class="post-title">
           <i *ngIf="post.pinned" class="fas fa-thumbtack" title="Épinglé"></i>

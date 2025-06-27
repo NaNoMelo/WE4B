@@ -67,7 +67,7 @@ export class Cours implements OnInit {
     if (this.courseId) {
       this.postService.getPostsByCourse(this.courseId).subscribe({
         next: (posts: Post[]) => {
-          this.posts = posts;
+          this.posts = this.sortPosts(posts);
         },
         error: (error: any) => {
           console.error('Error loading posts:', error);
@@ -76,11 +76,29 @@ export class Cours implements OnInit {
     }
   }
 
+  private sortPosts(posts: Post[]): Post[] {
+    return posts.sort((a, b) => {
+      // First, sort by pinned status (pinned posts come first)
+      if (a.pinned && !b.pinned) return -1;
+      if (!a.pinned && b.pinned) return 1;
+      
+      // If both have same pinned status, sort by date (most recent first)
+      const dateA = new Date(a.date_time).getTime();
+      const dateB = new Date(b.date_time).getTime();
+      return dateB - dateA; // Descending order (most recent first)
+    });
+  }
+
+  // Public method to refresh posts (can be called after editing)
+  refreshPosts(): void {
+    this.loadPosts();
+  }
+
   private checkModifyPermissions(): void {
     if (this.currentUser && this.course) {
       // Check if current user is the course responsible or has admin role
       this.canModify = this.currentUser.id === this.course.user_responsible_id || 
-                      this.currentUser.roles.includes('ROLE_ADMIN');
+                      this.currentUser.roles.includes('ROLE_TEACHER');
     }
   }
 
@@ -113,6 +131,7 @@ export class Cours implements OnInit {
     console.log('Deleting post:', postId);
     this.postService.deletePost(postId).subscribe({
       next: () => {
+        // Remove the deleted post and maintain sorting
         this.posts = this.posts.filter(post => post.id !== postId);
         console.log('Post deleted successfully');
       },
