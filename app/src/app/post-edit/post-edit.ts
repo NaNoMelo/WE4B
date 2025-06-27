@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { PostService } from '../services/post.service';
 import { CourseService } from '../services/course.service';
 import { FileService } from '../services/file.service';
+import { AssignmentService } from '../services/assignment.service';
 import { Post, Course } from '../models/api.models';
 
 @Component({
@@ -23,6 +24,8 @@ export class PostEdit implements OnInit {
   protected fileName: string = '';
   protected isLoading: boolean = false;
   protected attachedFile: any = null; // Store file information
+  protected assignmentDueDate: string = '';
+  protected assignmentMaxScore: number | undefined = undefined;
 
   protected post: Partial<Post> = {
     title: '',
@@ -36,7 +39,8 @@ export class PostEdit implements OnInit {
     private route: ActivatedRoute,
     private postService: PostService,
     private courseService: CourseService,
-    private fileService: FileService
+    private fileService: FileService,
+    private assignmentService: AssignmentService
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +95,7 @@ export class PostEdit implements OnInit {
     });
   }
 
-  private loadFileData(fileId: string): void {
+  private loadFileData(fileId: number): void {
     this.fileService.getFileById(fileId).subscribe({
       next: (file) => {
         this.attachedFile = file;
@@ -184,6 +188,63 @@ export class PostEdit implements OnInit {
     // For file posts, you would first upload the file, then create the post
     // This is a simplified implementation
     this.onSubmitText();
+  }
+
+  onSubmitAssignment(): void {
+    console.log('Submitting assignment post:', this.post);
+    
+    if (!this.assignmentDueDate) {
+      alert('Veuillez spécifier une date d\'échéance pour le devoir');
+      return;
+    }
+
+    this.isLoading = true;
+
+    // Create assignment data
+    const assignmentData = {
+      title: this.post.title || '',
+      description: this.post.description || '',
+      due_date: new Date(this.assignmentDueDate).toISOString(),
+      max_score: this.assignmentMaxScore,
+      course_id: this.courseId,
+      created_by: 'current_user_id', // Would be from auth context
+      created_date: new Date().toISOString()
+    };
+
+    // Create the assignment first
+    this.assignmentService.createAssignment(assignmentData).subscribe({
+      next: (assignment) => {
+        // Then create the post with assignment reference
+        const postData = {
+          title: this.post.title || '',
+          description: this.post.description || '',
+          pinned: this.post.pinned || false,
+          importance: this.post.importance || 'normal',
+          type: 'assignment' as const,
+          assignment_id: assignment.id
+        };
+
+        if (this.isNewPost) {
+          this.postService.createPost(this.courseId, postData).subscribe({
+            next: (response: any) => {
+              console.log('Assignment post created successfully:', response);
+              this.isLoading = false;
+              this.router.navigate(['/course', this.courseId]);
+            },
+            error: (error: any) => {
+              console.error('Error creating assignment post:', error);
+              this.isLoading = false;
+              alert('Erreur lors de la création du post de devoir');
+            }
+          });
+        }
+      },
+      error: (error: any) => {
+        console.error('Error creating assignment:', error);
+        this.isLoading = false;
+        alert('Erreur lors de la création du devoir');
+      }
+    });
   }
 
   onFileChange(event: any): void {

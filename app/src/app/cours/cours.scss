@@ -73,7 +73,6 @@
 
 // Special styling for pinned posts
 .post:has(.fa-thumbtack) {
-  background-color: var(--color-primary-light);
   border-color: var(--color-primary);
   border-width: 2px;
   box-shadow: var(--shadow-md);
@@ -81,7 +80,6 @@
 
 // Fallback for browsers that don't support :has() selector
 .post[data-pinned="true"] {
-  background-color: var(--color-primary-light);
   border-color: var(--color-primary);
   border-width: 2px;
   box-shadow: var(--shadow-md);
@@ -318,4 +316,90 @@
   border-radius: var(--border-radius-sm);
   background-color: var(--color-white);
   margin-right: var(--spacing-md);
+}
+
+// Assignment attachment styling
+.assignment-attachment {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-gray-50);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-300);
+  }
+}
+
+.assignment-icon-container {
+  margin-right: var(--spacing-md);
+}
+
+.assignment-icon {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.assignment-info {
+  flex: 1;
+  margin-right: var(--spacing-md);
+}
+
+.assignment-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.assignment-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+}
+
+.assignment-type-badge {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.assignment-status {
+  font-style: italic;
+}
+
+.assignment-view-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 0.875rem;
+  }
 }

@@ -32,8 +32,9 @@ export interface Post {
   importance: string;
   author_id: string;
   course_id: string;
-  type?: string; // 'text' or 'file'
-  file_id?: string; // File ID when type is 'file'
+  type?: string; // 'text', 'file', or 'assignment'
+  file_id?: number; // File ID when type is 'file'
+  assignment_id?: string; // Assignment ID when type is 'assignment'
 }
 
 export interface Notification {
@@ -46,7 +47,7 @@ export interface Notification {
 }
 
 export interface FileModel {
-  id: string;
+  id: number;
   name: string;
   extension: string;
   size?: number; // File size in bytes
@@ -67,6 +68,28 @@ export interface Log {
   timestamp: string;
   description: string;
   user_id?: string; // Optional user ID for filtering logs by user
+}
+
+export interface Assignment {
+  id: string;
+  title: string;
+  description: string;
+  due_date: string;
+  max_score?: number;
+  course_id: string;
+  created_by: string;
+  created_date: string;
+}
+
+export interface AssignmentSubmission {
+  id: string;
+  assignment_id: string;
+  student_id: string;
+  file_id?: number;
+  submitted_date: string;
+  score?: number;
+  feedback?: string;
+  status: 'submitted' | 'graded' | 'late';
 }
 
 // Request/Response types

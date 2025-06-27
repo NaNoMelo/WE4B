@@ -16,7 +16,7 @@ export class FileService extends ApiService {
     
     // Fake response for development with metadata
     const fakeFileResponse: FileModel = {
-      id: 'file-' + Date.now(),
+      id: Date.now(),
       name: file.name.split('.')[0],
       extension: file.name.split('.').pop() || '',
       size: file.size,
@@ -29,11 +29,11 @@ export class FileService extends ApiService {
   }
 
   // GET /files/{id} - Get file by ID (not in swagger but likely needed)
-  getFileById(fileId: string): Observable<FileModel> {
+  getFileById(fileId: number): Observable<FileModel> {
     // Mock data with specific files for development
-    const mockFiles: { [key: string]: FileModel } = {
-      'file_001': {
-        id: 'file_001',
+    const mockFiles: { [key: number]: FileModel } = {
+      1: {
+        id: 1,
         name: 'TD1_POO_Exercices',
         extension: 'pdf',
         size: 2048576, // 2MB
@@ -41,8 +41,8 @@ export class FileService extends ApiService {
         upload_date: '2025-01-22T10:30:00Z',
         uploaded_by: '3'
       },
-      'file_002': {
-        id: 'file_002', 
+      2: {
+        id: 2, 
         name: 'Cours_Chapitre1',
         extension: 'docx',
         size: 1536000, // 1.5MB
@@ -50,8 +50,8 @@ export class FileService extends ApiService {
         upload_date: '2025-01-16T14:00:00Z',
         uploaded_by: '3'
       },
-      'file_003': {
-        id: 'file_003',
+      3: {
+        id: 3,
         name: 'Correction_TP1',
         extension: 'java',
         size: 8192, // 8KB
@@ -77,7 +77,7 @@ export class FileService extends ApiService {
   }
 
   // GET /files/{id}/download - Download file (not in swagger but likely needed)
-  downloadFile(fileId: string): Observable<Blob> {
+  downloadFile(fileId: number): Observable<Blob> {
     console.log('Downloading file:', fileId);
     
     // Get file info first to determine content type
@@ -129,7 +129,7 @@ export class FileService extends ApiService {
   }
 
   // DELETE /files/{id} - Delete file (not in swagger but likely needed)
-  deleteFile(fileId: string): Observable<any> {
+  deleteFile(fileId: number): Observable<any> {
     // Empty function for now - will be implemented when backend is ready
     console.log('Deleting file:', fileId);
     return of({ message: 'File deleted successfully' });
