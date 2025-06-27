@@ -21,6 +21,13 @@ export class AdminPage implements OnInit {
   protected users: User[] = [];
   protected courses: Course[] = [];
 
+  // Role labels in French
+  protected roleLabels: { [key: string]: string } = {
+    'ROLE_ADMIN': 'Administrateur',
+    'ROLE_TEACHER': 'Enseignant',
+    'ROLE_USER': 'Étudiant'
+  };
+
   constructor(
     private router: Router,
     private userService: UserService,
@@ -124,6 +131,10 @@ export class AdminPage implements OnInit {
 
   closeModal(): void {
     this.showModal = false;
+    this.resetDeleteState();
+  }
+
+  private resetDeleteState(): void {
     this.deleteType = '';
     this.deleteId = '';
   }
@@ -152,5 +163,9 @@ export class AdminPage implements OnInit {
         }
       });
     }
+  }
+
+  getRoleLabels(roles: string[]): string {
+    return roles.map(role => this.roleLabels[role] || role).join(', ');
   }
 }

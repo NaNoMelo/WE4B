@@ -30,6 +30,13 @@ export class CreateUser implements OnInit {
   // Available roles
   protected availableRoles: string[] = ['ROLE_ADMIN', 'ROLE_TEACHER', 'ROLE_USER'];
   
+  // Role labels in French
+  protected roleLabels: { [key: string]: string } = {
+    'ROLE_ADMIN': 'Administrateur',
+    'ROLE_TEACHER': 'Enseignant',
+    'ROLE_USER': 'Étudiant'
+  };
+  
   protected courses: Course[] = [];
   protected userCourseIds: string[] = [];
 

@@ -1,0 +1,33 @@
+/* Full-screen layout for login and logout pages */
+.full-screen-layout {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ensure the main layout doesn't interfere when navigation is hidden */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Additional styling to ensure clean full-screen experience */
+.full-screen-layout router-outlet {
+  width: 100%;
+  height: 100%;
+}
+
+/* User role display styling */
+.user-name {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  
+  .user-role {
+    font-size: 0.8em;
+    color: #6c757d;
+    font-weight: normal;
+    margin-top: 2px;
+  }
+}

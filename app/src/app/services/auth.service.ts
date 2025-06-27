@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { ApiService } from './api.service';
 import { User, LoginRequest, RegisterRequest, LoginResponse } from '../models/api.models';
@@ -7,23 +8,44 @@ import { User, LoginRequest, RegisterRequest, LoginResponse } from '../models/ap
   providedIn: 'root'
 })
 export class AuthService extends ApiService {
+  private currentUserData: User | null = null;
+
+  constructor(http: HttpClient) {
+    super(http);
+    // Load user data from localStorage on service initialization
+    this.loadUserFromStorage();
+  }
+
+  private loadUserFromStorage(): void {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      try {
+        this.currentUserData = JSON.parse(storedUser);
+      } catch (error) {
+        console.error('Error parsing stored user data:', error);
+        localStorage.removeItem('currentUser');
+      }
+    }
+  }
+
+  private saveUserToStorage(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserData = user;
+  }
+
+  private clearUserFromStorage(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserData = null;
+  }
 
   // GET /auth/me - Get current authenticated user
   getCurrentUser(): Observable<User> {
-    // Always use mock data for development
     const token = this.getToken();
-    if (token) {
-      const fakeUser: User = {
-        id: '4',
-        email: 'teacher.admin@example.com',
-        name: 'Professeur',
-        first_name: 'Pierre',
-        roles: ['ROLE_TEACHER', 'ROLE_ADMIN']
-      };
-      return of(fakeUser);
+    if (token && this.currentUserData) {
+      return of(this.currentUserData);
     }
     
-    // Return empty user if no token
+    // Return empty user if no token or user data
     const emptyUser: User = {
       id: '',
       email: '',
@@ -32,6 +54,12 @@ export class AuthService extends ApiService {
       roles: []
     };
     return of(emptyUser);
+  }
+
+  // Check if user is authenticated
+  override isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!(token && this.currentUserData && this.currentUserData.id);
   }
 
   // POST /auth/login - Log in
@@ -83,8 +111,9 @@ export class AuthService extends ApiService {
       user: user
     };
     
-    // Set the fake token
+    // Set the fake token and store user data
     this.setToken(fakeResponse.token);
+    this.saveUserToStorage(user);
     
     return of(fakeResponse);
     // Real implementation: return this.post<LoginResponse>('/auth/login', credentials);
@@ -113,5 +142,23 @@ export class AuthService extends ApiService {
   // Logout user
   logout(): void {
     this.removeToken();
+    this.clearUserFromStorage();
+  }
+
+  // Helper methods for role checking
+  hasRole(role: string): boolean {
+    return this.currentUserData?.roles?.includes(role) || false;
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole('ROLE_ADMIN');
+  }
+
+  isTeacher(): boolean {
+    return this.hasRole('ROLE_TEACHER');
+  }
+
+  isUser(): boolean {
+    return this.hasRole('ROLE_USER');
   }
 }

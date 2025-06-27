@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { ApiService } from './api.service';
-import { Course } from '../models/api.models';
+import { Course, User } from '../models/api.models';
 
 @Injectable({
   providedIn: 'root'
@@ -120,5 +120,8 @@ export class CourseService extends ApiService {
     console.log('Unenrolling from course:', courseId);
     return of({ message: 'Unenrolled successfully' });
     // Real implementation: return this.delete(`/courses/${courseId}/unenroll`);
+  }
+  getImageUrl(imageFileName: string): string {
+    return `${this.baseUrl}/uploads/${imageFileName}`;
   }
 }

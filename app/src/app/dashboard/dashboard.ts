@@ -65,8 +65,8 @@ export class Dashboard implements OnInit {
     });
   }
 
-  getCourseImageUrl(courseId: number): string {
+  getCourseImageUrl(courseId: string): string {
     // Use an online placeholder image service, seeding with the course ID for consistency.
-    return `https://picsum.photos/seed/395/300/200`;
+    return `https://picsum.photos/seed/${courseId}/300/200`;
   }
 }

@@ -66,18 +66,23 @@ export class PostEdit implements OnInit {
   }
 
   private loadPostData(): void {
-    // For now, create sample data since we don't have a getPostById method
-    // In a real implementation, you would call this.postService.getPostById(this.postId)
-    this.post = {
-      title: 'Post existant',
-      description: 'Contenu du post existant...',
-      importance: 'normal',
-      pinned: false
-    };
-    
-    // If the post has an attached file, initialize attachedFile
-    // This would come from the real API response
-    // this.attachedFile = { name: 'example', extension: 'pdf' };
+    this.isLoading = true;
+    this.postService.getPostById(this.postId).subscribe({
+      next: (post: Post) => {
+        this.post = {
+          title: post.title,
+          description: post.description,
+          importance: post.importance,
+          pinned: post.pinned
+        };
+        this.courseId = post.course_id;
+        this.isLoading = false;
+      },
+      error: (error: any) => {
+        console.error('Error loading post data:', error);
+        this.isLoading = false;
+      }
+    });
   }
 
   setPostType(type: string): void {

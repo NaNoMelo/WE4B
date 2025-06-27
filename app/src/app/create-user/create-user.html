@@ -1,22 +1,21 @@
 <div class="welcome-banner">
-  <h2>Créer un utilisateur<    <div class="courses-section">
-      <h3>Cours associés</h3>
-      <p>Sélectionnez les cours auxquels cet utilisateur a accès :</p>
-      <div class="courses-list">
-        <div *ngFor="let course of courses" class="course-item">
-          <label>
-            <input type="checkbox" [value]="course.id" (change)="onCourseToggle(course.id, $event)" [checked]="userCourseIds.includes(course.id)">
-            {{ course.code }} - {{ course.name }}
-          </label>
-        </div>
-      </div>
-    </div>
+  <h2>Créer un utilisateur</h2>
+  <p>Ajoutez un nouvel utilisateur au système.</p>
+</div>
+
 <section class="form-container">
   <div *ngIf="message" class="alert" [ngClass]="{'alert-success': success, 'alert-danger': !success}">
     {{ message }}
   </div>
 
-  <form #userForm="ngForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Création de l'utilisateur...</p>
+  </div>
+
+  <form #userForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
     <div class="form-group">
       <label for="name">Nom :</label>
       <input id="name" name="name" [(ngModel)]="user.name" class="form-control" required>
@@ -32,20 +31,14 @@
     
     <div class="form-group">
       <label>Rôles :</label>
-      <p class="help-text">Un enseignant peut aussi être administrateur (sélectionnez plusieurs rôles si nécessaire)</p>
-      <div class="roles-container">
+      <div class="roles-list">
         <div *ngFor="let role of availableRoles" class="role-item">
           <label>
             <input type="checkbox"
                    [value]="role"
                    (change)="onRoleToggle(role, $event)"
                    [checked]="user.roles.includes(role)">
-            <span [ngSwitch]="role">
-              <span *ngSwitchCase="'ROLE_ADMIN'">Administrateur</span>
-              <span *ngSwitchCase="'ROLE_TEACHER'">Enseignant</span>
-              <span *ngSwitchCase="'ROLE_USER'">Étudiant</span>
-              <span *ngSwitchDefault>{{ role }}</span>
-            </span>
+            {{ roleLabels[role] }}
           </label>
         </div>
       </div>
@@ -79,8 +72,7 @@
     <div class="btn-group">
       <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
       <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isLoading">
-        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
-        {{ isLoading ? 'Enregistrement...' : 'Créer l\'utilisateur' }}
+        Créer l'utilisateur
       </button>
     </div>
   </form>

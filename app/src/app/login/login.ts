@@ -41,17 +41,32 @@ export class Login {
         next: (response) => {
           console.log('Login successful:', response);
           this.isLoading = false;
-          // Navigate to dashboard after successful login
-          this.router.navigate(['/dashboard']);
+          
+          // Use intelligent routing based on user role
+          const user = response.user;
+          if (user && user.roles) {
+            const hasOnlyAdminRole = user.roles.length === 1 && user.roles.includes('ROLE_ADMIN');
+            
+            if (hasOnlyAdminRole) {
+              // Redirect admin-only users to admin page
+              this.router.navigate(['/admin']);
+            } else {
+              // Redirect other users to dashboard
+              this.router.navigate(['/dashboard']);
+            }
+          } else {
+            // Fallback to dashboard
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: (error) => {
           console.error('Login failed:', error);
-          this.errorMessage = 'Invalid credentials. Please try again.';
+          this.errorMessage = 'E-mail ou mot de passe incorrect.';
           this.isLoading = false;
         }
       });
     } else {
-      this.errorMessage = 'Please fill in all required fields.';
+      this.errorMessage = 'Veuillez remplir tous les champs requis.';
     }
   }
 

@@ -68,6 +68,23 @@
   border-radius: var(--border-radius-lg);
   padding: 1.5rem;
   margin-bottom: 1rem;
+  transition: box-shadow var(--transition-fast);
+}
+
+// Special styling for pinned posts
+.post:has(.fa-thumbtack) {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  border-width: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+// Fallback for browsers that don't support :has() selector
+.post[data-pinned="true"] {
+  background-color: var(--color-primary-light);
+  border-color: var(--color-primary);
+  border-width: 2px;
+  box-shadow: var(--shadow-md);
 }
 
 .post-header {
@@ -80,6 +97,24 @@
 .post-title {
   font-weight: bold;
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  
+  .fa-thumbtack {
+    color: var(--color-primary);
+    font-size: 1rem;
+  }
+  
+  .fa-exclamation-circle {
+    color: var(--color-danger);
+    font-size: 1rem;
+  }
+  
+  .fa-info-circle {
+    color: var(--color-gray-500);
+    font-size: 1rem;
+  }
 }
 
 .post-meta {

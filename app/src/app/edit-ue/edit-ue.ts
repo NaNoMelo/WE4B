@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { CourseService } from '../services/course.service';
 import { UserService } from '../services/user.service';
 import { Course, User } from '../models/api.models';
@@ -17,7 +18,7 @@ export class EditUe implements OnInit {
   protected message: string = '';
   protected success: boolean = false;
   protected currentImageUrl: string = '';
-  protected isLoading: boolean = false;
+  protected isLoading: boolean = true;
   
   protected course: Course = {
     id: '',
@@ -39,36 +40,33 @@ export class EditUe implements OnInit {
 
   ngOnInit(): void {
     this.ueId = this.route.snapshot.paramMap.get('id') || '';
-    this.loadTeachers();
-    this.loadCourseData();
-  }
 
-  private loadTeachers(): void {
-    this.userService.getAllUsers().subscribe({
-      next: (users: User[]) => {
-        // Filter users to show only teachers/admins
+    if (!this.ueId) {
+      this.isLoading = false;
+      this.message = 'ID de l\'UE non trouvé.';
+      this.success = false;
+      return;
+    }
+
+    forkJoin({
+      users: this.userService.getAllUsers(),
+      course: this.courseService.getCourseById(this.ueId)
+    }).subscribe({
+      next: ({ users, course }) => {
         this.teachers = users.filter(user => 
           user.roles.includes('ROLE_TEACHER') || 
           user.roles.includes('ROLE_ADMIN')
         );
+        this.course = course;
+        this.isLoading = false;
       },
-      error: (error: any) => {
-        console.error('Error loading teachers:', error);
+      error: (error) => {
+        console.error('Error loading data:', error);
+        this.message = 'Erreur lors du chargement des données.';
+        this.success = false;
+        this.isLoading = false;
       }
     });
-  }
-
-  private loadCourseData(): void {
-    if (this.ueId) {
-      this.courseService.getCourseById(this.ueId).subscribe({
-        next: (course: Course) => {
-          this.course = course;
-        },
-        error: (error: any) => {
-          console.error('Error loading course data:', error);
-        }
-      });
-    }
   }
 
   onSubmit(): void {
