@@ -1,0 +1,125 @@
+.post-type-buttons {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-xl);
+}
+
+.post-type-button {
+  flex: 1;
+  padding: var(--spacing-lg);
+  font-size: 1.2rem;
+  border: var(--border-width) solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  background-color: var(--color-gray-100);
+  cursor: pointer;
+  text-align: center;
+  transition: all var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.post-type-button.active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.post-type-button i {
+  font-size: 2rem;
+}
+
+.post-form {
+  background-color: var(--color-white);
+  border: var(--border-width) solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: var(--border-width) solid var(--color-gray-300);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+}
+
+textarea.form-control {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.file-upload {
+  border: 2px dashed var(--color-gray-300);
+  padding: var(--spacing-xl);
+  border-radius: var(--border-radius-sm);
+  text-align: center;
+  margin-bottom: var(--spacing-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.file-upload:hover,
+.file-upload.dragover {
+  border-color: var(--color-primary);
+}
+
+.file-upload i {
+  font-size: 2.5rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-gray-500);
+}
+
+.uploading-clue {
+  margin-top: var(--spacing-md);
+  color: var(--color-info);
+  font-weight: bold;
+  animation: blink 1s linear infinite;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+}
+
+.submit-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: var(--spacing-md);
+}
+
+.cancel-button {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border: var(--border-width) solid var(--color-gray-300);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.file-attachment {
+  display: flex;
+  align-items: center;
+}
+
+.file-name {
+  margin-right: 0.5em;
+}

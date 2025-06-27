@@ -1,0 +1,83 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Chargement du cours...</p>
+</div>
+
+<!-- Course Content -->
+<div *ngIf="!isLoading && course">
+  <div class="course-header">
+    <div class="course-details">
+      <h1>{{ course.code }} - {{ course.name.length > 40 ? (course.name | slice:0:40) + '…' : course.name }}</h1>
+      <p>{{ course.description }}</p>
+      <small class="text-muted">Créé le {{ course.creation_date | date:'dd/MM/yyyy' }}</small>
+    </div>
+    <button *ngIf="canModify"
+            class="delete-button"
+            (click)="onDeleteCourse()">
+      <i class="fas fa-trash"></i> Supprimer le cours
+    </button>
+  </div>
+
+  <div class="course-nav">
+    <a [routerLink]="['/course', course.id, 'participants']">Participants</a>
+  </div>
+
+  <div class="course-description">
+    <p>{{ course.description }}</p>
+  </div>
+
+  <div class="posts-section">
+    <div class="posts-header">
+      <h2>Annonces et publications du cours</h2>
+      <button *ngIf="canModify"
+              class="new-post-button"
+              (click)="onNewPost()">
+        <i class="fas fa-plus"></i> Nouveau post
+      </button>
+    </div>
+
+    <p *ngIf="posts.length === 0">Aucune publication pour le moment.</p>
+    <div *ngFor="let post of posts" class="post" [attr.data-post-id]="post.id">
+      <div class="post-header">
+        <div class="post-title">
+          <i *ngIf="post.pinned" class="fas fa-thumbtack" title="Épinglé"></i>
+          <i *ngIf="post.importance === 'high'" class="fas fa-exclamation-circle" title="Important"></i>
+          <i *ngIf="post.importance === 'low'" class="fas fa-info-circle" title="Moins important"></i>
+          {{ post.title }}
+        </div>
+        <div class="post-meta">
+          {{ post.date_time | date:'dd/MM/yyyy à HH:mm' }}
+          <span *ngIf="post.author_id">· par Auteur {{ post.author_id }}</span>
+          <a *ngIf="canModify" (click)="onEditPost(post.id)">· Modifier</a>
+          <a *ngIf="canModify" (click)="onDeletePost(post.id)" class="delete-post-link">
+            · <span style="color:var(--color-danger)">Supprimer</span>
+          </a>
+        </div>
+      </div>
+      <div class="post-content">
+        <p [innerHTML]="post.description"></p>
+        <!-- File attachments would be handled here when backend supports it -->
+        <div class="file-attachment" *ngIf="false">
+          <div class="file-info">
+            <i class="fas fa-file file-icon"></i>
+            <div class="file-details">
+              <div class="file-name">Nom du fichier</div>
+              <div class="file-meta">Informations du fichier</div>
+            </div>
+          </div>
+          <button class="file-download" (click)="onDownload(post.id)">
+            <i class="fas fa-download"></i> Télécharger
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!isLoading && !course" class="alert alert-danger">
+  Erreur lors du chargement du cours.
+</div>

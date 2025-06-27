@@ -1,0 +1,175 @@
+<div class="breadcrumb">
+  <a [routerLink]="['/course', courseId]">{{ course?.name || 'Cours' }}</a> &gt;
+  {{ isEditing ? 'Modifier' : 'Créer' }} un post
+</div>
+
+<h1>{{ isEditing ? 'Modifier' : 'Créer' }} un post</h1>
+
+<div class="post-type-buttons">
+  <button type="button"
+          class="post-type-button"
+          [ngClass]="{'active': postType === 'text'}"
+          (click)="setPostType('text')">
+    <i class="fas fa-comment-alt"></i>
+    Message texte
+  </button>
+  <button type="button"
+          class="post-type-button"
+          [ngClass]="{'active': postType === 'file'}"
+          (click)="setPostType('file')">
+    <i class="fas fa-file-upload"></i>
+    Partage de fichier
+  </button>
+</div>
+
+<form *ngIf="postType === 'text'"
+      class="post-form active"
+      (ngSubmit)="onSubmitText()"
+      #formText="ngForm">
+  <input type="hidden" name="post_type" value="text">
+  <input type="hidden" name="course_id" [value]="courseId">
+  <input *ngIf="isEditing" type="hidden" name="post_id" [value]="postId">
+
+  <div class="form-group">
+    <label for="title-text">Titre</label>
+    <input id="title-text"
+           name="title"
+           class="form-control"
+           required
+           [(ngModel)]="post.title">
+  </div>
+
+  <div class="form-group">
+    <label for="content-text">Contenu du message</label>
+    <textarea id="content-text"
+              name="description"
+              class="form-control"
+              required
+              [(ngModel)]="post.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="importance-text">Importance</label>
+    <select id="importance-text"
+            name="importance"
+            class="form-control"
+            [(ngModel)]="post.importance">
+      <option value="normal">Normale</option>
+      <option value="high">Haute</option>
+      <option value="low">Basse</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox"
+             name="pinned"
+             [(ngModel)]="post.pinned">
+      Épingler ce post
+    </label>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="submit-button" [disabled]="isLoading">
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      <i *ngIf="!isLoading" class="fas fa-save"></i>
+      {{ isLoading ? 'Enregistrement...' : (isEditing ? 'Mettre à jour' : 'Publier') }}
+    </button>
+    <button type="button"
+            class="cancel-button"
+            (click)="onCancel()">
+      Annuler
+    </button>
+  </div>
+</form>
+
+<form *ngIf="postType === 'file'"
+      class="post-form active"
+      (ngSubmit)="onSubmitFile()"
+      #formFile="ngForm"
+      enctype="multipart/form-data">
+  <input type="hidden" name="post_type" value="file">
+  <input type="hidden" name="course_id" [value]="courseId">
+  <input *ngIf="isEditing" type="hidden" name="post_id" [value]="postId">
+
+  <div class="form-group">
+    <label for="title-file">Titre</label>
+    <input id="title-file"
+           name="title"
+           class="form-control"
+           required
+           [(ngModel)]="post.title">
+  </div>
+
+  <div class="form-group">
+    <label for="content-file">Description</label>
+    <textarea id="content-file"
+              name="content"
+              class="form-control"
+              [(ngModel)]="post.description"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="importance-file">Importance</label>
+    <select id="importance-file"
+            name="importance"
+            class="form-control"
+            [(ngModel)]="post.importance">
+      <option value="normal">Normale</option>
+      <option value="high">Haute</option>
+      <option value="low">Basse</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>
+      <input type="checkbox"
+             name="pinned"
+             [(ngModel)]="post.pinned">
+      Épingler ce post
+    </label>
+  </div>
+
+  <div class="form-group">
+    <label for="file-input">Fichier</label>
+    <div class="file-upload"
+         (click)="fileInput.click()"
+         (dragover)="onDragOver($event)"
+         (dragleave)="onDragLeave($event)"
+         (drop)="onDrop($event)">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>{{ fileName || 'Cliquez ou déposez un fichier ici' }}</p>
+      <div *ngIf="fileName" class="uploading-clue">
+        Fichier sélectionné, prêt à être envoyé...
+      </div>
+    </div>
+    <input #fileInput
+           type="file"
+           name="file"
+           style="display:none;"
+           (change)="onFileChange($event)"
+           [required]="!isEditing">
+    <div *ngIf="attachedFile" class="file-attachment">
+      <i class="fas fa-file" style="font-size:1.2em;margin-right:0.5em;"></i>
+      <span class="file-name">{{ attachedFile.name }}</span>
+      <span class="file-ext">.{{ attachedFile.extension }}</span>
+      <a class="file-download"
+         [href]="getDownloadUrl()"
+         style="margin-left:1em;">
+        <i class="fas fa-download"></i> Télécharger
+      </a>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button type="submit" class="submit-button">
+      <i class="fas fa-save"></i>
+      {{ isEditing ? 'Mettre à jour' : 'Publier' }}
+    </button>
+    <button type="button"
+            class="cancel-button"
+            (click)="onCancel()">
+      Annuler
+    </button>
+  </div>
+</form>
