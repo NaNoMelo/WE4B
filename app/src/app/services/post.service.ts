@@ -20,7 +20,8 @@ export class PostService extends ApiService {
         pinned: true,
         importance: 'high',
         author_id: '3',
-        course_id: courseId
+        course_id: courseId,
+        type: 'text'
       },
       {
         id: '2',
@@ -30,7 +31,8 @@ export class PostService extends ApiService {
         pinned: false,
         importance: 'normal',
         author_id: '3',
-        course_id: courseId
+        course_id: courseId,
+        type: 'text'
       },
       {
         id: '3',
@@ -40,7 +42,8 @@ export class PostService extends ApiService {
         pinned: false,
         importance: 'low',
         author_id: '3',
-        course_id: courseId
+        course_id: courseId,
+        type: 'text'
       },
       {
         id: '4',
@@ -50,7 +53,32 @@ export class PostService extends ApiService {
         pinned: true,
         importance: 'high',
         author_id: '3',
-        course_id: courseId
+        course_id: courseId,
+        type: 'text'
+      },
+      {
+        id: '5',
+        title: 'TD1 - Exercices pratiques POO',
+        description: 'Fichier PDF contenant les exercices dirigés pour la première séance de travaux dirigés.',
+        date_time: '2025-01-22T11:30:00Z',
+        pinned: true,
+        importance: 'normal',
+        author_id: '3',
+        course_id: courseId,
+        type: 'file',
+        file_id: 'file_001'
+      },
+      {
+        id: '6',
+        title: 'Correction TP1',
+        description: 'Fichier Java contenant la correction complète du premier travail pratique.',
+        date_time: '2025-01-25T08:45:00Z',
+        pinned: false,
+        importance: 'normal',
+        author_id: '3',
+        course_id: courseId,
+        type: 'file',
+        file_id: 'file_003'
       }
     ];
     return of(fakePosts);
@@ -60,7 +88,37 @@ export class PostService extends ApiService {
   getPostById(postId: string): Observable<Post> {
     // Mock response for development
     console.log('Getting post by ID:', postId);
-    const fakePost: Post = {
+    
+    // Mock data matching the posts in getPostsByCourse
+    const mockPosts: { [key: string]: Post } = {
+      '5': {
+        id: '5',
+        title: 'TD1 - Exercices pratiques POO',
+        description: 'Fichier PDF contenant les exercices dirigés pour la première séance de travaux dirigés.',
+        date_time: '2025-01-22T11:30:00Z',
+        pinned: false,
+        importance: 'normal',
+        author_id: '3',
+        course_id: '1',
+        type: 'file',
+        file_id: 'file_001'
+      },
+      '6': {
+        id: '6',
+        title: 'Correction TP1',
+        description: 'Fichier Java contenant la correction complète du premier travail pratique.',
+        date_time: '2025-01-25T08:45:00Z',
+        pinned: false,
+        importance: 'normal',
+        author_id: '3',
+        course_id: '1',
+        type: 'file',
+        file_id: 'file_003'
+      }
+    };
+
+    // Return specific post if it exists, otherwise default
+    const fakePost: Post = mockPosts[postId] || {
       id: postId,
       title: 'Post existant',
       description: 'Contenu du post existant...',
@@ -68,7 +126,8 @@ export class PostService extends ApiService {
       pinned: false,
       importance: 'normal',
       author_id: '3',
-      course_id: '1' // This should be dynamic based on the post
+      course_id: '1',
+      type: 'text'
     };
     return of(fakePost);
     // Real implementation: return this.get<Post>(`/posts/${postId}`);
@@ -100,7 +159,9 @@ export class PostService extends ApiService {
       pinned: postData.pinned || false,
       importance: postData.importance || 'normal',
       author_id: '4',
-      course_id: postData.course_id || '1'
+      course_id: postData.course_id || '1',
+      type: postData.type || 'text',
+      file_id: postData.file_id
     };
     return of(updatedPost);
   }

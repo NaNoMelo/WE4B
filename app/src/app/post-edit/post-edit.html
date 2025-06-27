@@ -8,18 +8,25 @@
 <div class="post-type-buttons">
   <button type="button"
           class="post-type-button"
-          [ngClass]="{'active': postType === 'text'}"
+          [ngClass]="{'active': postType === 'text', 'disabled': isEditing}"
+          [disabled]="isEditing"
           (click)="setPostType('text')">
     <i class="fas fa-comment-alt"></i>
     Message texte
   </button>
   <button type="button"
           class="post-type-button"
-          [ngClass]="{'active': postType === 'file'}"
+          [ngClass]="{'active': postType === 'file', 'disabled': isEditing}"
+          [disabled]="isEditing"
           (click)="setPostType('file')">
     <i class="fas fa-file-upload"></i>
     Partage de fichier
   </button>
+</div>
+
+<div *ngIf="isEditing" class="info-message">
+  <i class="fas fa-info-circle"></i>
+  Le type de post ne peut pas être modifié lors de l'édition.
 </div>
 
 <form *ngIf="postType === 'text'"
@@ -151,13 +158,22 @@
            [required]="!isEditing">
     <div *ngIf="attachedFile" class="file-attachment">
       <i class="fas fa-file" style="font-size:1.2em;margin-right:0.5em;"></i>
-      <span class="file-name">{{ attachedFile.name }}</span>
-      <span class="file-ext">.{{ attachedFile.extension }}</span>
-      <a class="file-download"
-         [href]="getDownloadUrl()"
-         style="margin-left:1em;">
+      <div class="file-details">
+        <div class="file-name-ext">
+          <span class="file-name">{{ attachedFile.name }}</span>
+          <span class="file-ext">.{{ attachedFile.extension }}</span>
+        </div>
+        <div class="file-metadata" *ngIf="attachedFile.size || attachedFile.upload_date">
+          <span class="file-size" *ngIf="attachedFile.size">{{ formatFileSize(attachedFile.size) }}</span>
+          <span class="file-date" *ngIf="attachedFile.upload_date">{{ attachedFile.upload_date | date:'dd/MM/yyyy' }}</span>
+        </div>
+      </div>
+      <button class="file-download-button"
+              type="button"
+              (click)="onDownloadFile()"
+              style="margin-left:1em;">
         <i class="fas fa-download"></i> Télécharger
-      </a>
+      </button>
     </div>
   </div>
 

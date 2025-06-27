@@ -32,6 +32,8 @@ export interface Post {
   importance: string;
   author_id: string;
   course_id: string;
+  type?: string; // 'text' or 'file'
+  file_id?: string; // File ID when type is 'file'
 }
 
 export interface Notification {
@@ -47,6 +49,10 @@ export interface FileModel {
   id: string;
   name: string;
   extension: string;
+  size?: number; // File size in bytes
+  mime_type?: string; // MIME type of the file
+  upload_date?: string; // ISO date string when file was uploaded
+  uploaded_by?: string; // User ID who uploaded the file
 }
 
 export interface Inscription {
@@ -54,6 +60,13 @@ export interface Inscription {
   course_id: string;
   user_id: string;
   enrollment_date: string;
+}
+
+export interface Log {
+  id: string;
+  timestamp: string;
+  description: string;
+  user_id?: string; // Optional user ID for filtering logs by user
 }
 
 // Request/Response types

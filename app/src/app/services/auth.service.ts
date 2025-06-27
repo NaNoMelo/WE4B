@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
+import { LogService } from './log.service';
 import { User, LoginRequest, RegisterRequest, LoginResponse } from '../models/api.models';
 
 @Injectable({
@@ -9,9 +11,11 @@ import { User, LoginRequest, RegisterRequest, LoginResponse } from '../models/ap
 })
 export class AuthService extends ApiService {
   private currentUserData: User | null = null;
+  private logService: LogService;
 
   constructor(http: HttpClient) {
     super(http);
+    this.logService = new LogService(http);
     // Load user data from localStorage on service initialization
     this.loadUserFromStorage();
   }
@@ -101,6 +105,9 @@ export class AuthService extends ApiService {
     // Check if user exists
     const user = mockUsers[credentials.email];
     if (!user) {
+      // Log failed login attempt (no user_id for failed attempts)
+      this.logService.log(`Tentative de connexion échouée pour l'email: ${credentials.email}`);
+      
       // Return error observable for unknown email
       return throwError(() => new Error('Email ou mot de passe incorrect'));
     }
@@ -114,6 +121,11 @@ export class AuthService extends ApiService {
     // Set the fake token and store user data
     this.setToken(fakeResponse.token);
     this.saveUserToStorage(user);
+    
+    // Log successful login with user_id
+    this.logService.log(`Utilisateur ${user.first_name} ${user.name} s'est connecté avec succès`, user.id);
+    
+    return of(fakeResponse);
     
     return of(fakeResponse);
     // Real implementation: return this.post<LoginResponse>('/auth/login', credentials);
@@ -141,6 +153,11 @@ export class AuthService extends ApiService {
 
   // Logout user
   logout(): void {
+    // Log logout before clearing user data
+    if (this.currentUserData) {
+      this.logService.log(`Déconnexion de l'utilisateur ${this.currentUserData.first_name} ${this.currentUserData.name}`, this.currentUserData.id);
+    }
+    
     this.removeToken();
     this.clearUserFromStorage();
   }

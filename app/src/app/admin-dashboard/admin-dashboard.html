@@ -1,0 +1,34 @@
+<div class="admin-dashboard">
+  <div class="welcome-banner">
+    <h1>Tableau de bord Administrateur</h1>
+    <p>Accédez aux fonctionnalités d'administration du système</p>
+  </div>
+
+  <div class="dashboard-cards">
+    <div class="dashboard-card" (click)="navigateToAdminPage()">
+      <div class="card-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <div class="card-content">
+        <h3>Gestion</h3>
+        <p>Gérer les utilisateurs et les unités d'enseignement</p>
+      </div>
+      <div class="card-arrow">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+
+    <div class="dashboard-card" (click)="navigateToLogs()">
+      <div class="card-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div class="card-content">
+        <h3>Journaux</h3>
+        <p>Consulter les journaux système et les activités des utilisateurs</p>
+      </div>
+      <div class="card-arrow">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+  </div>
+</div>

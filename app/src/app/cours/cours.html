@@ -25,10 +25,6 @@
     <a [routerLink]="['/course', course.id, 'participants']">Participants</a>
   </div>
 
-  <div class="course-description">
-    <p>{{ course.description }}</p>
-  </div>
-
   <div class="posts-section">
     <div class="posts-header">
       <h2>Annonces et publications du cours</h2>
@@ -51,25 +47,35 @@
         <div class="post-meta">
           {{ post.date_time | date:'dd/MM/yyyy à HH:mm' }}
           <span *ngIf="post.author_id">· par Auteur {{ post.author_id }}</span>
-          <a *ngIf="canModify" (click)="onEditPost(post.id)">· Modifier</a>
-          <a *ngIf="canModify" (click)="onDeletePost(post.id)" class="delete-post-link">
-            · <span style="color:var(--color-danger)">Supprimer</span>
-          </a>
+          <button *ngIf="canModify" class="modify-button" (click)="onEditPost(post.id)">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button *ngIf="canModify" class="delete-button-small" (click)="onDeletePost(post.id)">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
         </div>
       </div>
       <div class="post-content">
         <p [innerHTML]="post.description"></p>
-        <!-- File attachments would be handled here when backend supports it -->
-        <div class="file-attachment" *ngIf="false">
+        <!-- File attachments for file type posts -->
+        <div class="file-attachment" *ngIf="post.type === 'file' && post.file_id">
+          <div class="file-icon-container">
+            <i class="fas fa-file-pdf file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.pdf')"></i>
+            <i class="fas fa-file-word file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.doc')"></i>
+            <i class="fas fa-file-code file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.java')"></i>
+            <i class="fas fa-file-alt file-icon" *ngIf="!getFileName(post.file_id).toLowerCase().includes('.pdf') && !getFileName(post.file_id).toLowerCase().includes('.doc') && !getFileName(post.file_id).toLowerCase().includes('.java')"></i>
+          </div>
           <div class="file-info">
-            <i class="fas fa-file file-icon"></i>
-            <div class="file-details">
-              <div class="file-name">Nom du fichier</div>
-              <div class="file-meta">Informations du fichier</div>
+            <div class="file-name">{{ getFileName(post.file_id) }}</div>
+            <div class="file-meta">
+              <span class="file-type-badge">Fichier joint</span>
+              <span class="file-size" *ngIf="getFileMetadata(post.file_id)?.size">{{ formatFileSize(getFileMetadata(post.file_id)?.size!) }}</span>
+              <span class="file-upload-date" *ngIf="getFileMetadata(post.file_id)?.upload_date">{{ getFileMetadata(post.file_id)?.upload_date | date:'dd/MM/yyyy' }}</span>
             </div>
           </div>
-          <button class="file-download" (click)="onDownload(post.id)">
-            <i class="fas fa-download"></i> Télécharger
+          <button class="file-download-button" (click)="onDownload(post.file_id)" title="Télécharger le fichier">
+            <i class="fas fa-download"></i>
+            <span>Télécharger</span>
           </button>
         </div>
       </div>
