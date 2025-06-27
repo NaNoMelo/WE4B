@@ -1,0 +1,67 @@
+<div class="participants-header">
+  <div class="participants-details">
+    <h1 *ngIf="course">{{ course.name }} - Participants</h1>
+    <p *ngIf="course">{{ course.description }}</p>
+  </div>
+  <button routerLink="/course/{{courseId}}" class="back-button">
+    <i class="fas fa-arrow-left"></i> Retour au cours
+  </button>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Chargement des participants...</p>
+</div>
+
+<div class="participants-section" *ngIf="!isLoading">
+  <div class="participants-section-header">
+    <h2>
+      <i class="fas fa-chalkboard-teacher"></i>
+      Professeurs
+      <span class="participants-count">{{ professors.length }}</span>
+    </h2>
+  </div>
+  <div *ngIf="professors.length === 0" class="empty-message">
+    Aucun professeur n'est assigné à ce cours.
+  </div>
+  <ul *ngIf="professors.length > 0" class="participants-list">
+    <li *ngFor="let professor of professors" class="participant-item">
+      <div class="participant-info">
+        <div class="participant-name">
+          {{ professor.first_name }} {{ professor.name }}
+          <span *ngIf="course && course.user_responsible_id === professor.id"
+                class="responsible">(Responsable)</span>
+        </div>
+        <div class="participant-email">
+          <a href="mailto:{{ professor.email }}">{{ professor.email }}</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<div class="participants-section" *ngIf="!isLoading">
+  <div class="participants-section-header">
+    <h2>
+      <i class="fas fa-user-graduate"></i>
+      Étudiants
+      <span class="participants-count">{{ students.length }}</span>
+    </h2>
+  </div>
+  <div *ngIf="students.length === 0" class="empty-message">
+    Aucun étudiant n'est inscrit à ce cours.
+  </div>
+  <ul *ngIf="students.length > 0" class="participants-list">
+    <li *ngFor="let student of students" class="participant-item">
+      <div class="participant-info">
+        <div class="participant-name">{{ student.first_name }} {{ student.name }}</div>
+        <div class="participant-email">
+          <a href="mailto:{{ student.email }}">{{ student.email }}</a>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

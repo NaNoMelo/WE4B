@@ -1,18 +1,53 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-signin">
     <div class="text-center mb-4">
-            <img src="images/utbm_carre.png" alt="Logo UTBM"  width="72" height="72">
-            <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
-        </div>
-    <div class="form-label-group">
-        <input type="email" formControlName="email" class="form-control" id="email" autocomplete="email" required autofocus>
-        <label for="email">Email address</label>
+        <img src="images/utbm_carre.png" alt="Logo UTBM" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
     </div>
+    
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+    </div>
+    
     <div class="form-label-group">
-        <input type="password" formControlName="password" class="form-control" id="password" autocomplete="current-password" required>
+        <input type="email" formControlName="email" class="form-control" 
+               [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+               id="email" autocomplete="email" required autofocus>
+        <label for="email">Email address</label>
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="invalid-feedback">
+            <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
+            <div *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</div>
+        </div>
+    </div>
+    
+    <div class="form-label-group">
+        <input [type]="hidePassword ? 'password' : 'text'" formControlName="password" 
+               class="form-control" 
+               [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+               id="password" autocomplete="current-password" required>
         <label for="password">Password</label>
-        <span (click)="togglePasswordVisibility()">
+        <span (click)="togglePasswordVisibility()" class="password-toggle">
             <i class="bi" [ngClass]="{'bi-eye': hidePassword, 'bi-eye-slash': !hidePassword}"></i>
         </span>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="invalid-feedback">
+            <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
+        </div>
     </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+    
+    <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+    
+    <!-- Development Login Hints -->
+    <div class="dev-hints mt-4 p-3 bg-light border rounded">
+        <h6 class="text-muted mb-2">🔧 Development Login Hints:</h6>
+        <small class="text-muted d-block">
+            <strong>Teacher + Admin:</strong> teacher.admin&#64;example.com<br>
+            <strong>Admin Only:</strong> admin&#64;example.com<br>
+            <strong>Teacher Only:</strong> teacher&#64;example.com<br>
+            <strong>Student:</strong> student&#64;example.com<br>
+            <em>Password: any text works in dev mode</em>
+        </small>
+    </div>
 </form>
