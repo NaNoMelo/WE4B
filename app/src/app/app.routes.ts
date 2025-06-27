@@ -15,13 +15,15 @@ import { TeacherGuard } from './guards/teacher.guard';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { Logout } from './logout/logout';
+import { Logs } from './logs/logs';
+import { AdminDashboard } from './admin-dashboard/admin-dashboard';
 
 export const routes: Routes = [
   { path: '', canActivate: [AuthGuard], children: [] },
   { path: 'login', component: Login },
   { path: 'dashboard', component: Dashboard, canActivate: [DashboardGuard] },
   { path: 'profile', component: Profile },
-  { path: 'admin', component: AdminPage, canActivate: [AdminGuard] },
+  { path: 'admin-gestion', component: AdminPage, canActivate: [AdminGuard] },
   { path: 'cours/:id', component: Cours },
   { path: 'course/:id', component: Cours },
   { path: 'course/:id/participants', component: CourseParticipant, canActivate: [TeacherGuard] },
@@ -30,5 +32,8 @@ export const routes: Routes = [
   { path: 'create-user', component: CreateUser, canActivate: [AdminGuard] },
   { path: 'edit-user/:id', component: EditUser, canActivate: [AdminGuard] },
   { path: 'post-edit/:id', component: PostEdit, canActivate: [TeacherGuard] },
-  { path: 'logout', component: Logout}
+  { path: 'logout', component: Logout},
+  { path: 'logs', component: Logs, canActivate: [AdminGuard] },
+  { path: 'logs/user/:userId', component: Logs, canActivate: [AdminGuard] },
+  { path: 'admin', component: AdminDashboard, canActivate: [AdminGuard]}
 ];

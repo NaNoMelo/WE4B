@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
 import { CourseService } from '../services/course.service';
+import { AuthService } from '../services/auth.service';
 import { User, Course } from '../models/api.models';
 
 @Component({
@@ -20,6 +21,7 @@ export class AdminPage implements OnInit {
 
   protected users: User[] = [];
   protected courses: Course[] = [];
+  protected currentUser: User | null = null;
 
   // Role labels in French
   protected roleLabels: { [key: string]: string } = {
@@ -31,10 +33,14 @@ export class AdminPage implements OnInit {
   constructor(
     private router: Router,
     private userService: UserService,
-    private courseService: CourseService
+    private courseService: CourseService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.getCurrentUser().subscribe(user => {
+      this.currentUser = user;
+    });
     this.loadUsers();
     this.loadCourses();
   }
@@ -167,5 +173,9 @@ export class AdminPage implements OnInit {
 
   getRoleLabels(roles: string[]): string {
     return roles.map(role => this.roleLabels[role] || role).join(', ');
+  }
+
+  onViewUserLogs(userId: string): void {
+    this.router.navigate(['/logs/user', userId]);
   }
 }

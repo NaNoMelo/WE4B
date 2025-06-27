@@ -22,6 +22,7 @@
 .action-icons a { margin-right: var(--spacing-sm); }
 .delete-btn { color: var(--color-danger); }
 .edit-btn { color: var(--color-primary); }
+.logs-btn { color: var(--color-secondary); }
 .modal { position: fixed; z-index:1000; left:0; top:0; width:100%; height:100%;
          background-color: rgba(0,0,0,0.5); display: flex; align-items:center; justify-content:center; }
 .modal-content { background-color: var(--color-white); padding: var(--spacing-lg);
@@ -36,3 +37,11 @@
 .confirm-btn:hover { background-color: #d16d1a; box-shadow: var(--shadow-md); }
 .cancel-btn { background-color: var(--color-gray-600); color: var(--color-white); }
 .cancel-btn:hover { background-color: var(--color-gray-700); box-shadow: var(--shadow-md); }
+// Remove custom welcome-banner styling to use global dashboard style
+
+// ...existing code...
+.admin-page {
+  padding: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}

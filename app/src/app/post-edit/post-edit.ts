@@ -76,6 +76,12 @@ export class PostEdit implements OnInit {
           pinned: post.pinned
         };
         this.courseId = post.course_id;
+        // Set the post type based on the loaded post
+        this.postType = post.type || 'text';
+        // If it's a file post, load the file information
+        if (post.type === 'file' && post.file_id) {
+          this.loadFileData(post.file_id);
+        }
         this.isLoading = false;
       },
       error: (error: any) => {
@@ -85,7 +91,65 @@ export class PostEdit implements OnInit {
     });
   }
 
+  private loadFileData(fileId: string): void {
+    this.fileService.getFileById(fileId).subscribe({
+      next: (file) => {
+        this.attachedFile = file;
+        this.fileName = `${file.name}.${file.extension}`;
+      },
+      error: (error: any) => {
+        console.error('Error loading file data:', error);
+      }
+    });
+  }
+
+  onDownloadFile(): void {
+    if (!this.attachedFile || !this.attachedFile.id) {
+      console.error('No file to download');
+      return;
+    }
+
+    const fileId = this.attachedFile.id;
+    console.log('Starting download for file:', this.fileName);
+    
+    // Use the download API
+    this.fileService.downloadFile(fileId).subscribe({
+      next: (blob: Blob) => {
+        // Create download link and trigger download
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        
+        console.log('File downloaded successfully:', this.fileName);
+      },
+      error: (error) => {
+        console.error('Error downloading file:', error);
+        alert('Erreur lors du téléchargement du fichier');
+      }
+    });
+  }
+
+  // Format file size in human readable format
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 B';
+    
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
   setPostType(type: string): void {
+    // Prevent changing post type when editing an existing post
+    if (this.isEditing) {
+      return;
+    }
     this.postType = type;
   }
 
@@ -174,7 +238,8 @@ export class PostEdit implements OnInit {
   }
 
   getDownloadUrl(): string {
-    return '#'; // Placeholder URL
+    // This method is deprecated - use onDownloadFile() instead
+    return '#';
   }
 
   onSubmit(): void {
