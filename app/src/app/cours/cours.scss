@@ -402,4 +402,28 @@
   i {
     font-size: 0.875rem;
   }
+
+  &.disabled {
+    background-color: var(--color-gray-400);
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: var(--color-gray-400);
+    }
+  }
+}
+
+// Admin view for assignment posts
+.assignment-attachment.admin-view {
+  opacity: 0.7;
+  border-color: var(--color-gray-300);
+
+  .assignment-icon {
+    color: var(--color-gray-500);
+  }
+
+  .assignment-status {
+    color: var(--color-danger);
+    font-weight: 500;
+  }
 }

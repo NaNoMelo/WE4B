@@ -34,7 +34,7 @@ export interface Post {
   course_id: string;
   type?: string; // 'text', 'file', or 'assignment'
   file_id?: number; // File ID when type is 'file'
-  assignment_id?: string; // Assignment ID when type is 'assignment'
+  assignment_id?: number; // Assignment ID when type is 'assignment'
 }
 
 export interface Notification {
@@ -71,7 +71,7 @@ export interface Log {
 }
 
 export interface Assignment {
-  id: string;
+  id: number;
   title: string;
   description: string;
   due_date: string;
@@ -83,7 +83,7 @@ export interface Assignment {
 
 export interface AssignmentSubmission {
   id: string;
-  assignment_id: string;
+  assignment_id: number;
   student_id: string;
   file_id?: number;
   submitted_date: string;

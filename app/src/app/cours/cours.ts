@@ -88,6 +88,9 @@ export class Cours implements OnInit {
             this.preloadUserData(post.author_id);
           }
         });
+        
+        // Load file names and metadata for file posts
+        this.loadFileNames();
       },
       error: (error: any) => {
         console.error('Error loading posts:', error);
@@ -128,18 +131,6 @@ export class Cours implements OnInit {
     });
   }
 
-  private sortPosts(posts: Post[]): Post[] {
-    return posts.sort((a, b) => {
-      // First, sort by pinned status (pinned posts come first)
-      if (a.pinned && !b.pinned) return -1;
-      if (!a.pinned && b.pinned) return 1;
-      
-      // If both have same pinned status, sort by date (most recent first)
-      const dateA = new Date(a.date_time).getTime();
-      const dateB = new Date(b.date_time).getTime();
-      return dateB - dateA; // Descending order (most recent first)
-    });
-  }
 
   // Public method to refresh posts (can be called after editing)
   refreshPosts(): void {
@@ -152,6 +143,13 @@ export class Cours implements OnInit {
       this.canModify = this.currentUser.id === this.course.user_responsible_id || 
                       this.currentUser.roles.includes('ROLE_TEACHER');
     }
+  }
+
+  protected isAdmin(): boolean {
+    // Check if user is a pure admin (has ROLE_ADMIN but not ROLE_TEACHER)
+    // Admin teachers should still be able to access assignments
+    return this.currentUser?.roles?.includes('ROLE_ADMIN') && 
+           !this.currentUser?.roles?.includes('ROLE_TEACHER') || false;
   }
 
   onDeleteCourse(): void {
@@ -196,6 +194,27 @@ export class Cours implements OnInit {
         console.error('Error deleting post:', error);
       }
     });
+  }
+
+  // Get user name from user ID using API
+  getAuthorName(userId: string): string {
+    // Check cache first
+    if (this.userCache[userId]) {
+      const user = this.userCache[userId];
+      return `${user.first_name} ${user.name}`;
+    }
+    
+    // Load user data if not in cache
+    this.userService.getUserById(userId).subscribe({
+      next: (user: User) => {
+        this.userCache[userId] = user;
+      },
+      error: (error: any) => {
+        console.error('Error loading user:', userId, error);
+      }
+    });
+    
+    return 'Chargement...'; // Temporary placeholder while loading
   }
 
   // Get file name for file posts
@@ -264,26 +283,5 @@ export class Cours implements OnInit {
         alert('Erreur lors de la récupération des informations du fichier');
       }
     });
-  }
-
-  // Get user name from user ID using API
-  getAuthorName(userId: string): string {
-    // Check cache first
-    if (this.userCache[userId]) {
-      const user = this.userCache[userId];
-      return `${user.first_name} ${user.name}`;
-    }
-    
-    // Load user data if not in cache
-    this.userService.getUserById(userId).subscribe({
-      next: (user: User) => {
-        this.userCache[userId] = user;
-      },
-      error: (error: any) => {
-        console.error('Error loading user:', userId, error);
-      }
-    });
-    
-    return 'Chargement...'; // Temporary placeholder while loading
   }
 }
