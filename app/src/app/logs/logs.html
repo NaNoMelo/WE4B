@@ -1,0 +1,64 @@
+<div class="logs-page">
+  <div class="logs-container">
+  <div class="logs-header">
+    <h2 *ngIf="!userId">Journaux système</h2>
+    <h2 *ngIf="userId">Journaux de l'utilisateur {{ userId }}</h2>
+    
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="refreshLogs()">
+        <i class="fas fa-sync-alt"></i> Actualiser
+      </button>
+      <button class="btn btn-secondary" (click)="exportLogs()" [disabled]="logs.length === 0">
+        <i class="fas fa-download"></i> Exporter CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-section">
+    <div class="filter-group">
+      <label for="searchInput">Recherche :</label>
+      <input type="text" id="searchInput" [(ngModel)]="searchTerm" 
+             (input)="onSearchChange()" placeholder="Rechercher dans la description">
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-state">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Chargement des journaux...</p>
+  </div>
+
+  <!-- Logs Table -->
+  <div *ngIf="!isLoading" class="logs-table-container">
+    <div *ngIf="logs.length === 0" class="no-logs">
+      <i class="fas fa-file-alt"></i>
+      <p>Aucun journal trouvé pour les critères sélectionnés.</p>
+    </div>
+
+    <table *ngIf="logs.length > 0" class="logs-table">
+      <thead>
+        <tr>
+          <th>Horodatage</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of logs" class="log-row">
+          <td class="timestamp">
+            {{ log.timestamp | date:'dd/MM/yyyy HH:mm:ss' }}
+          </td>
+          <td class="description">
+            {{ log.description }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Summary -->
+  <div *ngIf="!isLoading && logs.length > 0" class="logs-summary">
+    <p>{{ logs.length }} journal(aux) affiché(s)</p>
+  </div>
+</div>
+</div>
