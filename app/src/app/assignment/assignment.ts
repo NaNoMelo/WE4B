@@ -16,7 +16,7 @@ import { Assignment, AssignmentSubmission, User, FileModel } from '../models/api
   styleUrl: './assignment.scss'
 })
 export class AssignmentComponent implements OnInit {
-  protected assignmentId: string = '';
+  protected assignmentId: number = 0;
   protected assignment: Assignment | null = null;
   protected currentUser: User | null = null;
   protected mySubmission: AssignmentSubmission | null = null;
@@ -39,7 +39,8 @@ export class AssignmentComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.assignmentId = this.route.snapshot.paramMap.get('id') || '';
+    const idParam = this.route.snapshot.paramMap.get('id');
+    this.assignmentId = idParam ? parseInt(idParam, 10) : 0;
     this.loadCurrentUserData();
     this.loadAssignmentData();
   }
@@ -93,7 +94,7 @@ export class AssignmentComponent implements OnInit {
   }
 
   private loadMySubmission(): void {
-    if (this.assignmentId && !this.isTeacher) {
+    if (this.assignmentId > 0 && !this.isTeacher) {
       this.assignmentService.getMySubmission(this.assignmentId).subscribe({
         next: (submission: AssignmentSubmission | null) => {
           this.mySubmission = submission;
@@ -106,7 +107,7 @@ export class AssignmentComponent implements OnInit {
   }
 
   private loadSubmissions(): void {
-    if (this.assignmentId && this.isTeacher) {
+    if (this.assignmentId > 0 && this.isTeacher) {
       this.assignmentService.getAssignmentSubmissions(this.assignmentId).subscribe({
         next: (submissions: AssignmentSubmission[]) => {
           this.submissions = submissions;

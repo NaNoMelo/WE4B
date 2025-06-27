@@ -12,6 +12,7 @@ import { EditUser } from './edit-user/edit-user';
 import { PostEdit } from './post-edit/post-edit';
 import { AdminGuard } from './guards/admin.guard';
 import { TeacherGuard } from './guards/teacher.guard';
+import { NonAdminGuard } from './guards/non-admin.guard';
 import { DashboardGuard } from './guards/dashboard.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { Logout } from './logout/logout';
@@ -28,7 +29,7 @@ export const routes: Routes = [
   { path: 'cours/:id', component: Cours },
   { path: 'course/:id', component: Cours },
   { path: 'course/:id/participants', component: CourseParticipant, canActivate: [TeacherGuard] },
-  { path: 'assignment/:id', component: AssignmentComponent },
+  { path: 'assignment/:id', component: AssignmentComponent, canActivate: [NonAdminGuard] },
   { path: 'create-ue', component: CreateUe, canActivate: [AdminGuard] },
   { path: 'edit-ue/:id', component: EditUe, canActivate: [AdminGuard] },
   { path: 'create-user', component: CreateUser, canActivate: [AdminGuard] },

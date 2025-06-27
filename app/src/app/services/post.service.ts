@@ -90,7 +90,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'assignment',
-        assignment_id: 'assign_001'
+        assignment_id: 1
       },
       {
         id: '8',
@@ -102,7 +102,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'assignment',
-        assignment_id: 'assign_002'
+        assignment_id: 2
       },
       {
         id: '9',
@@ -114,7 +114,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'assignment',
-        assignment_id: 'assign_003'
+        assignment_id: 3
       },
       {
         id: '10',
@@ -126,7 +126,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: courseId,
         type: 'assignment',
-        assignment_id: 'assign_004'
+        assignment_id: 4
       }
     ];
     return of(fakePosts);
@@ -173,7 +173,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'assignment',
-        assignment_id: 'assign_001'
+        assignment_id: 1
       },
       '8': {
         id: '8',
@@ -185,7 +185,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'assignment',
-        assignment_id: 'assign_002'
+        assignment_id: 2
       },
       '9': {
         id: '9',
@@ -197,7 +197,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'assignment',
-        assignment_id: 'assign_003'
+        assignment_id: 3
       },
       '10': {
         id: '10',
@@ -209,7 +209,7 @@ export class PostService extends ApiService {
         author_id: '3',
         course_id: '1',
         type: 'assignment',
-        assignment_id: 'assign_004'
+        assignment_id: 4
       }
     };
 

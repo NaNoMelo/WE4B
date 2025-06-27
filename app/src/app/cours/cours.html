@@ -80,7 +80,7 @@
         </div>
         
         <!-- Assignment posts -->
-        <div class="assignment-attachment" *ngIf="post.type === 'assignment' && post.assignment_id">
+        <div class="assignment-attachment" *ngIf="post.type === 'assignment' && post.assignment_id && !isAdmin()">
           <div class="assignment-icon-container">
             <i class="fas fa-clipboard-list assignment-icon"></i>
           </div>
@@ -95,6 +95,24 @@
             <i class="fas fa-external-link-alt"></i>
             <span>Ouvrir le devoir</span>
           </a>
+        </div>
+        
+        <!-- Assignment posts for admins (view only, no link) -->
+        <div class="assignment-attachment admin-view" *ngIf="post.type === 'assignment' && post.assignment_id && isAdmin()">
+          <div class="assignment-icon-container">
+            <i class="fas fa-clipboard-list assignment-icon"></i>
+          </div>
+          <div class="assignment-info">
+            <div class="assignment-label">Devoir à rendre</div>
+            <div class="assignment-meta">
+              <span class="assignment-type-badge">Devoir</span>
+              <span class="assignment-status">Accès restreint aux étudiants et enseignants</span>
+            </div>
+          </div>
+          <div class="assignment-view-button disabled" title="Accès non autorisé">
+            <i class="fas fa-ban"></i>
+            <span>Accès restreint</span>
+          </div>
         </div>
       </div>
     </div>
