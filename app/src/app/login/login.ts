@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { LoginRequest } from '../models/api.models';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class Login {
   protected hidePassword: boolean = true;
   protected isLoading: boolean = false;
   protected errorMessage: string = '';
+  protected mockData: boolean = environment.useMockData; // Show mock data info if enabled
 
   constructor(
     private authService: AuthService,
