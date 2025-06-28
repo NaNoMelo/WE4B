@@ -82,9 +82,9 @@ export class ApiService {
       console.warn(`Attempted HTTP file upload call to ${endpoint} blocked - using mock data only`);
       throw new Error('HTTP calls are disabled when useMockData is true. Use mock data in your service methods.');
     }
-    const headers = new HttpHeaders();
+    let headers = new HttpHeaders();
     if (this.token) {
-      headers.set('Authorization', `Bearer ${this.token}`);
+      headers = headers.set('Authorization', `Bearer ${this.token}`);
     }
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, formData, { headers });
   }
