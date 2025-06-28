@@ -12,3 +12,82 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  email      String   @unique
+  name       String
+  first_name String
+  password   String
+  roles      String[]
+
+  courses       Course[]       @relation("UserCourses")
+  posts         Post[]
+  notifications Notification[]
+  inscriptions  Inscription[]
+}
+
+model Course {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  code                String   @unique
+  name                String
+  description         String
+  creation_date       DateTime
+  picture             Bytes
+  user_responsible    User     @relation("UserCourses", fields: [user_responsible_id], references: [id])
+  user_responsible_id String   @db.ObjectId
+
+  notifications Notification[]
+  posts         Post[]
+  inscriptions  Inscription[]
+}
+
+model Notification {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  date_time   DateTime
+  title       String
+  description String
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String @db.ObjectId
+
+  course    Course @relation(fields: [course_id], references: [id])
+  course_id String @db.ObjectId
+}
+
+model Post {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  date_time   DateTime
+  pinned      Boolean
+  importance  String
+
+  author    User   @relation(fields: [author_id], references: [id])
+  author_id String @db.ObjectId
+
+  course    Course @relation(fields: [course_id], references: [id])
+  course_id String @db.ObjectId
+
+  file    File?   @relation(fields: [file_id], references: [id])
+  file_id String? @unique @db.ObjectId
+}
+
+model File {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  extension String
+  file      Bytes
+
+  post Post?
+}
+
+model Inscription {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  user      User   @relation(fields: [user_id], references: [id])
+  user_id   String @db.ObjectId
+  course    Course @relation(fields: [course_id], references: [id])
+  course_id String @db.ObjectId
+
+  @@unique([user_id, course_id])
+}
