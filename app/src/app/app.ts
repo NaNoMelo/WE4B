@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { User } from './models/api.models';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -54,6 +55,31 @@ export class App implements OnInit {
       });
     } else {
       this.user = null;
+    }
+
+    // Register Admin test account if not in production
+    if (!environment.production){
+      const adminEmail = 'admin@te.st';
+      const adminPassword = 'admin';
+      const adminName = 'Admin';
+      const adminFirstName = 'Test';
+      const adminRoles = ['ROLE_ADMIN'];
+
+      this.authService.register({
+        email: adminEmail,
+        password: adminPassword,
+        name: adminName,
+        first_name: adminFirstName,
+        roles: adminRoles
+      }).subscribe({
+        next: (response) => {
+          console.log('Admin test account registered:', response);
+        },
+        error: (error) => {
+          console.error('Error registering admin test account:', error);
+        }
+      });
+
     }
   }
 
