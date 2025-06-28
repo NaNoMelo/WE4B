@@ -1,2 +1,44 @@
-<app-navbar></app-navbar>
-<app-login></app-login>
+<div *ngIf="showNavigation">
+  <header class="main-header">
+    <div class="logo">
+      <a [routerLink]="isAdminOnly() ? '/admin' : '/dashboard'">MoodleClone</a>
+    </div>
+
+    <div class="user-menu" *ngIf="user">
+      <div class="user-dropdown">
+        <span class="user-name">
+          {{ user.first_name }} {{ user.name }}
+        </span>
+        <div class="dropdown-content">
+          <a routerLink="/profile"><i class="fas fa-user"></i> Profil</a>
+          <a routerLink="/logout"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <aside class="sidebar">
+      <div class="sidebar-block">
+        <h3>Navigation</h3>
+        <ul>
+          <li *ngIf="!isAdminOnly()">
+            <a routerLink="/dashboard"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a>
+          </li>
+          <li *ngIf="user?.roles?.includes('ROLE_ADMIN')">
+            <a routerLink="/admin"><i class="fas fa-cogs"></i> Administration</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+
+<!-- Full-screen layout for login and logout pages -->
+<div *ngIf="!showNavigation" class="full-screen-layout">
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,429 @@
+.course-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius-lg);
+  color: var(--color-white);
+}
+
+.course-icon {
+  font-size: 3rem;
+  margin-right: 1rem;
+}
+
+.course-details {
+  flex: 1;
+}
+
+.delete-button {
+  background-color: var(--color-danger);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.course-description {
+  background-color: var(--color-gray-100);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: var(--border-radius-lg);
+}
+
+.posts-section {
+  margin-bottom: 2rem;
+}
+
+.posts-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.new-post-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.post {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-lg);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  transition: box-shadow var(--transition-fast);
+}
+
+// Special styling for pinned posts
+.post:has(.fa-thumbtack) {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+// Fallback for browsers that don't support :has() selector
+.post[data-pinned="true"] {
+  border-color: var(--color-primary);
+  border-width: 2px;
+  box-shadow: var(--shadow-md);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.post-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  
+  .fa-thumbtack {
+    color: var(--color-primary);
+    font-size: 1rem;
+  }
+  
+  .fa-exclamation-circle {
+    color: var(--color-danger);
+    font-size: 1rem;
+  }
+  
+  .fa-info-circle {
+    color: var(--color-gray-500);
+    font-size: 1rem;
+  }
+}
+
+.post-meta {
+  color: var(--color-gray-500);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+.modify-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  i {
+    font-size: 0.7rem;
+  }
+}
+
+.delete-button-small {
+  background-color: #c82333;
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all var(--transition-fast);
+  
+  &:hover {
+    background-color: #a71e2a;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  i {
+    font-size: 0.7rem;
+  }
+}
+
+.post-content {
+  margin-top: var(--spacing-md);
+}
+
+.post-type {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.8rem;
+  margin-left: var(--spacing-sm);
+  color: var(--color-white);
+}
+
+.post-type-text {
+  background-color: var(--color-success);
+}
+
+.post-type-file {
+  background-color: var(--color-info);
+}
+
+.file-attachment {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-gray-50) 0%, var(--color-gray-100) 100%);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--border-radius-md);
+  padding: 1rem;
+  margin-top: var(--spacing-md);
+  gap: var(--spacing-md);
+}
+
+.file-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-xs);
+}
+
+.file-icon {
+  font-size: 1.5rem;
+  color: #007bff; // Blue color for all file icons
+  
+  &.fa-file-pdf,
+  &.fa-file-word,
+  &.fa-file-code,
+  &.fa-file-alt {
+    color: #007bff; // Blue color for all file types
+  }
+}
+
+.file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--color-gray-800);
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.file-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.8rem;
+}
+
+.file-type-badge {
+  color: #6c757d;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: normal;
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 2px 6px rgba(255, 107, 53, 0.3);
+  }
+  100% {
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.5);
+  }
+}
+
+.file-size {
+  color: var(--color-gray-500);
+}
+
+.file-upload-date {
+  color: var(--color-gray-500);
+  font-size: 0.75rem;
+}
+
+.file-download-button {
+  background-color: #007bff;
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  transition: background-color var(--transition-fast);
+  
+  &:hover {
+    background-color: #0056b3;
+  }
+  
+  i {
+    font-size: 0.8rem;
+  }
+}
+
+.course-nav {
+  display: flex;
+  justify-content: start;
+  margin-bottom: 2rem;
+}
+
+.course-nav a {
+  text-decoration: none;
+  color: var(--color-primary);
+  font-weight: bold;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-white);
+  margin-right: var(--spacing-md);
+}
+
+// Assignment attachment styling
+.assignment-attachment {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md);
+  background-color: var(--color-gray-50);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--border-radius-md);
+  margin-top: var(--spacing-md);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-300);
+  }
+}
+
+.assignment-icon-container {
+  margin-right: var(--spacing-md);
+}
+
+.assignment-icon {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.assignment-info {
+  flex: 1;
+  margin-right: var(--spacing-md);
+}
+
+.assignment-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-xs);
+}
+
+.assignment-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+}
+
+.assignment-type-badge {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.assignment-status {
+  font-style: italic;
+}
+
+.assignment-view-button {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--color-primary-dark);
+    color: var(--color-white);
+    text-decoration: none;
+  }
+
+  i {
+    font-size: 0.875rem;
+  }
+
+  &.disabled {
+    background-color: var(--color-gray-400);
+    cursor: not-allowed;
+    
+    &:hover {
+      background-color: var(--color-gray-400);
+    }
+  }
+}
+
+// Admin view for assignment posts
+.assignment-attachment.admin-view {
+  opacity: 0.7;
+  border-color: var(--color-gray-300);
+
+  .assignment-icon {
+    color: var(--color-gray-500);
+  }
+
+  .assignment-status {
+    color: var(--color-danger);
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,93 @@
+<div class="admin-page">
+  <div class="welcome-banner">
+    <h2>Page d'aministration des ustilisateurs et UE's</h2>
+    <p *ngIf="currentUser">Bonjour {{ currentUser.first_name }} {{ currentUser.name }}!</p>
+    <p>Gérez les utilisateurs et les unités d'enseignement.</p>
+  </div>
+
+<section class="admin-catalogue">
+  <div class="tabs">
+    <div class="tab" [ngClass]="{'active': activeTab==='users'}" (click)="selectTab('users')" id="tab-users">
+      Utilisateurs
+    </div>
+    <div class="tab" [ngClass]="{'active': activeTab==='courses'}" (click)="selectTab('courses')" id="tab-courses">
+      Unités d'Enseignement
+    </div>
+  </div>
+
+  <div class="tab-content" [ngClass]="{'active': activeTab==='users'}" id="content-users">
+    <button class="create-btn" (click)="onCreateUser()">
+      <i class="fas fa-plus"></i> Créer un utilisateur
+    </button>
+    <div *ngIf="isLoading" class="text-center py-4">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Chargement des utilisateurs...</p>
+    </div>
+    <table class="admin-table" *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Rôles</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users" [attr.data-id]="user.id" data-type="user">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.first_name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ getRoleLabels(user.roles) }}</td>
+          <td class="action-icons">
+            <a (click)="onViewUserLogs(user.id)" class="logs-btn" title="Voir les journaux"><i class="fas fa-history"></i></a>
+            <a (click)="onEditUser(user.id)" class="edit-btn" title="Modifier"><i class="fas fa-edit"></i></a>
+            <a (click)="confirmDelete('user', user.id)" class="delete-btn" title="Supprimer"><i class="fas fa-trash-alt"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tab-content" [ngClass]="{'active': activeTab==='courses'}" id="content-courses">
+    <button class="create-btn" (click)="onCreateUe()">
+      <i class="fas fa-plus"></i> Créer une UE
+    </button>
+    <div *ngIf="isLoading" class="text-center py-4">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p>Chargement des cours...</p>
+    </div>
+    <table class="admin-table" *ngIf="!isLoading">
+      <thead>
+        <tr>
+          <th>ID</th><th>Code</th><th>Nom</th><th>Description</th><th>Responsable ID</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of courses" [attr.data-id]="course.id" data-type="ue">
+          <td>{{ course.id }}</td>
+          <td>{{ course.code }}</td>
+          <td>{{ course.name.length > 40 ? (course.name | slice:0:40) + '…' : course.name }}</td>
+          <td>{{ course.description }}</td>
+          <td>{{ course.user_responsible_id }}</td>
+          <td class="action-icons">
+            <a (click)="onEditUe(course.id)" class="edit-btn"><i class="fas fa-edit"></i></a>
+            <a (click)="confirmDelete('ue', course.id)" class="delete-btn"><i class="fas fa-trash-alt"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!-- Modal -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-content">
+    <h3>Confirmation de suppression</h3>
+    <p>Êtes-vous sûr de vouloir supprimer cet élément ? Cette action est irréversible.</p>
+    <div class="modal-buttons">
+      <button class="confirm-btn" (click)="onDeleteConfirmed()">Supprimer</button>
+      <button class="cancel-btn" (click)="closeModal()">Annuler</button>
+    </div>
+  </div>
+</div>

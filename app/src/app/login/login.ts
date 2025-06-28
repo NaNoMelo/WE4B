@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { LoginRequest } from '../models/api.models';
 
 @Component({
   selector: 'app-login',
@@ -11,17 +14,60 @@ import { CommonModule } from '@angular/common';
 export class Login {
   protected loginForm: FormGroup;
   protected hidePassword: boolean = true;
+  protected isLoading: boolean = false;
+  protected errorMessage: string = '';
 
-  constructor() {
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = new FormGroup({
-      email: new FormControl(''),
-      password: new FormControl('')
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required])
     });
   }
 
   onSubmit() {
-    console.log('Login form submitted:', this.loginForm.value);
-    // Here you would typically handle the login logic, e.g., call an authentication service
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      this.errorMessage = '';
+      
+      const credentials: LoginRequest = {
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password
+      };
+
+      this.authService.login(credentials).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          this.isLoading = false;
+          
+          // Use intelligent routing based on user role
+          const user = response.user;
+          if (user && user.roles) {
+            const hasOnlyAdminRole = user.roles.length === 1 && user.roles.includes('ROLE_ADMIN');
+            
+            if (hasOnlyAdminRole) {
+              // Redirect admin-only users to admin page
+              this.router.navigate(['/admin']);
+            } else {
+              // Redirect other users to dashboard
+              this.router.navigate(['/dashboard']);
+            }
+          } else {
+            // Fallback to dashboard
+            this.router.navigate(['/dashboard']);
+          }
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+          this.errorMessage = 'E-mail ou mot de passe incorrect.';
+          this.isLoading = false;
+        }
+      });
+    } else {
+      this.errorMessage = 'Veuillez remplir tous les champs requis.';
+    }
   }
 
   togglePasswordVisibility(): void {

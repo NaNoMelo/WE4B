@@ -1,0 +1,79 @@
+<div class="welcome-banner">
+  <h2>Créer un utilisateur</h2>
+  <p>Ajoutez un nouvel utilisateur au système.</p>
+</div>
+
+<section class="form-container">
+  <div *ngIf="message" class="alert" [ngClass]="{'alert-success': success, 'alert-danger': !success}">
+    {{ message }}
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Création de l'utilisateur...</p>
+  </div>
+
+  <form #userForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+    <div class="form-group">
+      <label for="name">Nom :</label>
+      <input id="name" name="name" [(ngModel)]="user.name" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="first_name">Prénom :</label>
+      <input id="first_name" name="first_name" [(ngModel)]="user.first_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email :</label>
+      <input type="email" id="email" name="email" [(ngModel)]="user.email" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+      <label>Rôles :</label>
+      <div class="roles-list">
+        <div *ngFor="let role of availableRoles" class="role-item">
+          <label>
+            <input type="checkbox"
+                   [value]="role"
+                   (change)="onRoleToggle(role, $event)"
+                   [checked]="user.roles.includes(role)">
+            {{ roleLabels[role] }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="password-section">
+      <h3>Mot de passe</h3>
+      <div class="form-group">
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" [(ngModel)]="user.password" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">Confirmer le mot de passe :</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" class="form-control" required>
+      </div>
+    </div>
+
+    <div class="ue-section">
+      <h3>UE associées</h3>
+      <p>Sélectionnez les UE auxquelles cet utilisateur a accès :</p>
+      <div class="ue-list">
+        <div *ngFor="let course of courses" class="ue-item">
+          <label>
+            <input type="checkbox" [value]="course.id" (change)="onCourseToggle(course.id, $event)" [checked]="userCourseIds.includes(course.id)">
+            {{ course.code }} - {{ course.name }}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isLoading">
+        Créer l'utilisateur
+      </button>
+    </div>
+  </form>
+</section>

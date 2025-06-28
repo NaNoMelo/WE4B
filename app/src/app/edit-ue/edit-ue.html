@@ -1,0 +1,59 @@
+<div class="welcome-banner">
+  <h2>Modifier une unité d'enseignement</h2>
+  <p *ngIf="course.name">Modifiez les informations de l'UE {{ course.name }}</p>
+</div>
+
+<section class="form-container">
+  <div *ngIf="message" class="alert" [ngClass]="{'alert-success': success, 'alert-danger': !success}">
+    {{ message }}
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-4">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p>Modification en cours...</p>
+  </div>
+
+  <form #ueForm="ngForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data" *ngIf="!isLoading">
+    <div class="form-group">
+      <label for="nom">Nom de l'UE</label>
+      <input id="nom" name="name" [(ngModel)]="course.name" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label for="code">Code de l'UE</label>
+      <input id="code" name="code" [(ngModel)]="course.code" class="form-control" required>
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" name="description" [(ngModel)]="course.description" class="form-control" required></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="responsable">Responsable</label>
+      <select id="responsable" name="user_responsible_id" [(ngModel)]="course.user_responsible_id" class="form-control" required>
+        <option value="" disabled>Sélectionnez un responsable</option>
+        <option *ngFor="let teacher of teachers" [value]="teacher.id">
+          {{ teacher.first_name }} {{ teacher.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="image">Image de l'UE</label>
+      <div class="current-image" *ngIf="currentImageUrl">
+        <p>Image actuelle :</p>
+        <img [src]="currentImageUrl" alt="{{ course.name }}" class="course-img">
+      </div>
+      <input type="file" id="image" (change)="onFileChange($event)" accept="image/jpeg,image/png,image/gif">
+      <small>Formats acceptés : JPEG, PNG, GIF</small>
+    </div>
+
+    <div class="btn-group">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()">Annuler</button>
+      <button type="submit" class="btn btn-primary" [disabled]="ueForm.invalid || isLoading">Enregistrer les modifications</button>
+    </div>
+  </form>
+</section>

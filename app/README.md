@@ -12,6 +12,32 @@ ng serve
 
 Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
 
+## Test Login Credentials
+
+For development purposes, you can use these mock login credentials:
+
+### Student Account
+- **Email**: `student@example.com`
+- **Password**: Any password (development mode)
+- **Roles**: Student (ROLE_USER)
+
+### Teacher Account  
+- **Email**: `teacher@example.com`
+- **Password**: Any password (development mode)
+- **Roles**: Teacher (ROLE_TEACHER)
+
+### Admin Account
+- **Email**: `admin@example.com`
+- **Password**: Any password (development mode)
+- **Roles**: Admin (ROLE_ADMIN)
+
+### Teacher + Admin Account
+- **Email**: `teacher.admin@example.com`
+- **Password**: Any password (development mode)
+- **Roles**: Teacher + Admin (ROLE_TEACHER, ROLE_ADMIN)
+
+> **Note**: In development mode, any password will work for these email addresses. The backend authentication will be implemented later.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:

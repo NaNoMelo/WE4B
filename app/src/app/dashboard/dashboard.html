@@ -1,0 +1,58 @@
+<div class="welcome-banner">
+  <h2>Bienvenue sur votre tableau de bord</h2>
+  <p *ngIf="currentUser">Bonjour {{ currentUser.first_name }} {{ currentUser.name }}!</p>
+  <p>Retrouvez ici tous vos cours et activités récentes.</p>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Chargement de vos cours...</p>
+</div>
+
+<section class="course-list" *ngIf="!isLoading">
+  <h2>Mes cours</h2>
+  <div *ngIf="courses.length === 0" class="alert alert-info">
+    Aucun cours disponible pour le moment.
+  </div>
+  <div class="courses-grid" *ngIf="courses.length > 0">
+    <a *ngFor="let course of courses"
+       [routerLink]="['/course', course.id]"
+       class="course-card">
+      <div class="course-image">
+        <img [src]="getCourseImageUrl(course.id)"
+             [alt]="course.name"
+             class="course-img">
+      </div>
+      <div class="course-content">
+        <h3>{{ course.code }} - {{ course.name.length > 40 ? (course.name | slice:0:40) + '…' : course.name }}</h3>
+        <p>{{ course.description }}</p>
+        <small class="text-muted">Créé le {{ course.creation_date | date:'dd/MM/yyyy' }}</small>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="recent-activities" *ngIf="!isLoading">
+  <h2>Notifications récentes</h2>
+  <div *ngIf="notifications.length === 0" class="alert alert-info">
+    Aucune notification pour le moment.
+  </div>
+  <div class="activity-list" *ngIf="notifications.length > 0">
+    <div *ngFor="let notification of notifications" class="activity-item">
+      <div class="activity-icon">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="activity-content">
+        <a [routerLink]="['/course', notification.course_id]"
+           class="activity-link">
+          {{ notification.title }}
+        </a>
+        <p>{{ notification.description }}</p>
+        <span class="activity-time">{{ notification.date_time | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  </div>
+</section>

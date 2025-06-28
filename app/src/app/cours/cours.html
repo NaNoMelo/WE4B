@@ -1,0 +1,125 @@
+<!-- Loading State -->
+<div *ngIf="isLoading" class="text-center py-4">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+  <p>Chargement du cours...</p>
+</div>
+
+<!-- Course Content -->
+<div *ngIf="!isLoading && course">
+  <div class="course-header">
+    <div class="course-details">
+      <h1>{{ course.code }} - {{ course.name.length > 40 ? (course.name | slice:0:40) + '…' : course.name }}</h1>
+      <p>{{ course.description }}</p>
+      <small class="text-muted">Créé le {{ course.creation_date | date:'dd/MM/yyyy' }}</small>
+    </div>
+    <button *ngIf="canModify"
+            class="delete-button"
+            (click)="onDeleteCourse()">
+      <i class="fas fa-trash"></i> Supprimer le cours
+    </button>
+  </div>
+
+  <div class="course-nav">
+    <a [routerLink]="['/course', course.id, 'participants']">Participants</a>
+  </div>
+
+  <div class="posts-section">
+    <div class="posts-header">
+      <h2>Annonces et publications du cours</h2>
+      <button *ngIf="canModify"
+              class="new-post-button"
+              (click)="onNewPost()">
+        <i class="fas fa-plus"></i> Nouveau post
+      </button>
+    </div>
+
+    <p *ngIf="posts.length === 0">Aucune publication pour le moment.</p>
+    <div *ngFor="let post of posts" class="post" [attr.data-post-id]="post.id" [attr.data-pinned]="post.pinned">
+      <div class="post-header">
+        <div class="post-title">
+          <i *ngIf="post.pinned" class="fas fa-thumbtack" title="Épinglé"></i>
+          <i *ngIf="post.importance === 'high'" class="fas fa-exclamation-circle" title="Important"></i>
+          <i *ngIf="post.importance === 'low'" class="fas fa-info-circle" title="Moins important"></i>
+          {{ post.title }}
+        </div>
+        <div class="post-meta">
+          {{ post.date_time | date:'dd/MM/yyyy à HH:mm' }}
+          <span *ngIf="post.author_id">· par {{ getAuthorName(post.author_id) }}</span>
+          <button *ngIf="canModify" class="modify-button" (click)="onEditPost(post.id)">
+            <i class="fas fa-edit"></i> Modifier
+          </button>
+          <button *ngIf="canModify" class="delete-button-small" (click)="onDeletePost(post.id)">
+            <i class="fas fa-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+      <div class="post-content">
+        <p [innerHTML]="post.description"></p>
+        <!-- File attachments for file type posts -->
+        <div class="file-attachment" *ngIf="post.type === 'file' && post.file_id">
+          <div class="file-icon-container">
+            <i class="fas fa-file-pdf file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.pdf')"></i>
+            <i class="fas fa-file-word file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.doc')"></i>
+            <i class="fas fa-file-code file-icon" *ngIf="getFileName(post.file_id).toLowerCase().includes('.java')"></i>
+            <i class="fas fa-file-alt file-icon" *ngIf="!getFileName(post.file_id).toLowerCase().includes('.pdf') && !getFileName(post.file_id).toLowerCase().includes('.doc') && !getFileName(post.file_id).toLowerCase().includes('.java')"></i>
+          </div>
+          <div class="file-info">
+            <div class="file-name">{{ getFileName(post.file_id) }}</div>
+            <div class="file-meta">
+              <span class="file-type-badge">Fichier joint</span>
+              <span class="file-size" *ngIf="getFileMetadata(post.file_id)?.size">{{ formatFileSize(getFileMetadata(post.file_id)?.size!) }}</span>
+              <span class="file-upload-date" *ngIf="getFileMetadata(post.file_id)?.upload_date">{{ getFileMetadata(post.file_id)?.upload_date | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+          <button class="file-download-button" (click)="onDownload(post.file_id)" title="Télécharger le fichier">
+            <i class="fas fa-download"></i>
+            <span>Télécharger</span>
+          </button>
+        </div>
+        
+        <!-- Assignment posts -->
+        <div class="assignment-attachment" *ngIf="post.type === 'assignment' && post.assignment_id && !isAdmin()">
+          <div class="assignment-icon-container">
+            <i class="fas fa-clipboard-list assignment-icon"></i>
+          </div>
+          <div class="assignment-info">
+            <div class="assignment-label">Devoir à rendre</div>
+            <div class="assignment-meta">
+              <span class="assignment-type-badge">Devoir</span>
+              <span class="assignment-status">Cliquez pour voir les détails et soumettre</span>
+            </div>
+          </div>
+          <a [routerLink]="['/assignment', post.assignment_id]" class="assignment-view-button" title="Voir le devoir">
+            <i class="fas fa-external-link-alt"></i>
+            <span>Ouvrir le devoir</span>
+          </a>
+        </div>
+        
+        <!-- Assignment posts for admins (view only, no link) -->
+        <div class="assignment-attachment admin-view" *ngIf="post.type === 'assignment' && post.assignment_id && isAdmin()">
+          <div class="assignment-icon-container">
+            <i class="fas fa-clipboard-list assignment-icon"></i>
+          </div>
+          <div class="assignment-info">
+            <div class="assignment-label">Devoir à rendre</div>
+            <div class="assignment-meta">
+              <span class="assignment-type-badge">Devoir</span>
+              <span class="assignment-status">Accès restreint aux étudiants et enseignants</span>
+            </div>
+          </div>
+          <div class="assignment-view-button disabled" title="Accès non autorisé">
+            <i class="fas fa-ban"></i>
+            <span>Accès restreint</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error State -->
+<div *ngIf="!isLoading && !course" class="alert alert-danger">
+  Erreur lors du chargement du cours.
+</div>

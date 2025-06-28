@@ -1,0 +1,85 @@
+.course-card {
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.course-image {
+  height: 120px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-white);
+  font-size: 2rem;
+  background-color: var(--color-primary);
+}
+
+.course-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: var(--color-primary);
+  display: block;
+}
+
+.course-content {
+  padding: var(--spacing-md);
+}
+
+.course-content h3 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-gray-800);
+}
+
+.course-content p {
+  color: var(--color-gray-500);
+  margin-bottom: var(--spacing-md);
+  font-size: 0.9rem;
+}
+
+.activity-item {
+  display: flex;
+  background-color: var(--color-white);
+  padding: var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.activity-icon {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.activity-content h4, .activity-content a.activity-link {
+  margin-bottom: var(--spacing-xs);
+  text-decoration: underline;
+  color: var(--color-primary);
+}
+
+.activity-content p {
+  color: var(--color-gray-500);
+  font-size: 0.9rem;
+  margin-bottom: var(--spacing-xs);
+}
+
+.activity-time {
+  color: var(--color-gray-400);
+  font-size: 0.8rem;
+}

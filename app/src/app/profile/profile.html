@@ -1,0 +1,70 @@
+<div class="container">
+  <div *ngIf="isLoading" class="loading">
+    <p>Chargement du profil...</p>
+  </div>
+
+  <div *ngIf="!isLoading && user">
+    <h1>Mon Profil</h1>
+    
+    <div *ngIf="success === true" class="alert-success">{{ message }}</div>
+    <div *ngIf="success === false" class="alert-danger">{{ message }}</div>
+    
+    <form #profileForm="ngForm" (ngSubmit)="onSubmit()">
+      <div class="profile-info">
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <input id="email" name="email" [(ngModel)]="user.email" class="form-control" 
+                 type="email" required readonly>
+          <small class="form-text">L'adresse e-mail ne peut pas être modifiée</small>
+        </div>
+
+        <div class="form-group">
+          <label for="first_name">Prénom:</label>
+          <input id="first_name" name="first_name" [(ngModel)]="user.first_name" 
+                 class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Nom:</label>
+          <input id="name" name="name" [(ngModel)]="user.name" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label>Rôle:</label>
+          <div class="role-display">{{ getRoleDisplayText() }}</div>
+          <small class="form-text">Le rôle ne peut pas être modifié</small>
+        </div>
+      </div>
+
+      <div class="password-section">
+        <h3>Changer le mot de passe</h3>
+        <div class="form-group">
+          <label for="password">Nouveau mot de passe (laisser vide pour ne pas changer):</label>
+          <input type="password" id="password" name="password" [(ngModel)]="password" 
+                 class="form-control" autocomplete="new-password">
+        </div>
+
+        <div class="form-group">
+          <label for="confirm_password">Confirmer le mot de passe:</label>
+          <input type="password" id="confirm_password" name="confirm_password" 
+                 [(ngModel)]="confirmPassword" class="form-control" autocomplete="new-password">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="profileForm.invalid">
+          Mettre à jour
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Retour au tableau de bord
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="!isLoading && !user" class="error-state">
+    <h2>Erreur</h2>
+    <p>Impossible de charger les informations du profil.</p>
+    <button class="btn btn-primary" (click)="onCancel()">Retour au tableau de bord</button>
+  </div>
+</div>
