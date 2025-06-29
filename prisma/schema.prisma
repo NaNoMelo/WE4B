@@ -35,8 +35,8 @@ model Course {
   code                String   @unique
   name                String
   description         String
-  creation_date       DateTime
-  picture             Bytes
+  creation_date       DateTime @default(now())
+  picture             Bytes?
   user_responsible    User     @relation("UserCourses", fields: [user_responsible_id], references: [id])
   user_responsible_id String   @db.ObjectId
 
