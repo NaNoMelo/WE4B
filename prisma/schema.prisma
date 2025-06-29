@@ -25,6 +25,9 @@ model User {
   posts         Post[]
   notifications Notification[]
   inscriptions  Inscription[]
+  submissions   Submission[]
+  Assignment    Assignment[]
+  Log           Log[]
 }
 
 model Course {
@@ -40,6 +43,7 @@ model Course {
   notifications Notification[]
   posts         Post[]
   inscriptions  Inscription[]
+  Assignment    Assignment[]
 }
 
 model Notification {
@@ -79,7 +83,8 @@ model File {
   extension String
   file      Bytes
 
-  post Post?
+  post       Post?
+  Submission Submission?
 }
 
 model Inscription {
@@ -90,4 +95,40 @@ model Inscription {
   course_id String @db.ObjectId
 
   @@unique([user_id, course_id])
+}
+
+model Assignment {
+  id              String       @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  description     String
+  due_date        DateTime
+  max_score       Int
+  course_id       String       @db.ObjectId
+  course          Course       @relation(fields: [course_id], references: [id])
+  created_by      String       @db.ObjectId
+  created_by_user User         @relation(fields: [created_by], references: [id])
+  created_date    DateTime     @default(now())
+  submissions     Submission[]
+}
+
+model Submission {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  assignment_id  String     @db.ObjectId
+  assignment     Assignment @relation(fields: [assignment_id], references: [id])
+  student_id     String     @db.ObjectId
+  student        User       @relation(fields: [student_id], references: [id])
+  file_id        String     @unique @db.ObjectId
+  file           File       @relation(fields: [file_id], references: [id])
+  submitted_date DateTime   @default(now())
+  status         String     @default("submitted")
+  score          Int?
+  feedback       String?
+}
+
+model Log {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  timestamp   DateTime
+  description String
+  user_id     String   @db.ObjectId
+  user        User     @relation(fields: [user_id], references: [id])
 }
