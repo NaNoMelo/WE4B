@@ -28,7 +28,7 @@ export const routes: Routes = [
   { path: 'admin-gestion', component: AdminPage, canActivate: [AdminGuard] },
   { path: 'cours/:id', component: Cours },
   { path: 'course/:id', component: Cours },
-  { path: 'course/:id/participants', component: CourseParticipant, canActivate: [TeacherGuard] },
+  { path: 'course/:id/participants', component: CourseParticipant, canActivate: [NonAdminGuard] },
   { path: 'assignment/:id', component: AssignmentComponent, canActivate: [NonAdminGuard] },
   { path: 'create-ue', component: CreateUe, canActivate: [AdminGuard] },
   { path: 'edit-ue/:id', component: EditUe, canActivate: [AdminGuard] },
